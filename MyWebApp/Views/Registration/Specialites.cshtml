@@ -1,0 +1,10 @@
+﻿@model List<MyWebApp.Models.SpecialityModel>
+
+@{
+    Layout = null;
+}
+
+@foreach(var spec in Model)
+{
+    <option value ="@spec.Id">@spec.Name</option>
+}

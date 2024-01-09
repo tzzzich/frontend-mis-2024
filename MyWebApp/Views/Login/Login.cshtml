@@ -1,0 +1,39 @@
+﻿@model MyWebApp.Models.LoginCredentialsModel
+
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<main class="form-signin">
+    <div class="d-flex container justify-content-center">
+        <div class="card shadow" style="width: 50rem;">
+            <div class="card-body">
+                <h2 class="card-title">Вход</h2>
+                <form method="post" data-ajax="true" data-ajax-method="post" data-ajax-success="onLoginSuccess" data-ajax-failure="onLoginFailed" data-ajax-url="/login/login">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div id="errors" class="text-danger row d-none"></div>
+                    <div id="success" class="text-success row d-none"><span>Данные сохранены успешно</span></div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label">Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="name@example.com">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form">
+                        <label asp-for="Password" class="control-label">Пароль</label>
+                        <input asp-for="Password" type="password" class="form-control">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <br>
+                    <div class="form-button"><input type="submit" value="Войти" class="btn btn-primary btn-block button-self stand-alone"/></div>
+                    <div class="form-button"><a class="btn btn-secondary btn-block button-self stand-alone" href="/registration/" role="button">Зарегистрироваться</a></div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="~/js/login.js" asp-append-version="true"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

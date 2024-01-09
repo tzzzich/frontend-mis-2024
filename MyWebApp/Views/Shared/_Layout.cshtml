@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyWebApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MyWebApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm header-palette">
+            <div class="container-fluid">
+                <a class="navbar-brand header-palette">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" viewBox="0 0 256 256">
+                        <rect width="256" height="256" fill="none" />
+                        <circle cx="92" cy="132" r="20" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" />
+                        <circle cx="164" cy="132" r="20" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" />
+                        <path d="M80,194.5a92,92,0,1,1,96,0V216a8,8,0,0,1-8,8H88a8,8,0,0,1-8-8Z" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" />
+                        <line x1="112" y1="224" x2="112" y2="192" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" />
+                        <line x1="144" y1="224" x2="144" y2="192" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="12" />
+                    </svg>
+                </a>
+                <a class="navbar-brand header-palette" style="width: 5em; font-size:small" href="/">Try not to DIE</a>
+                @if (@HttpContextAccessor.HttpContext.Session.GetString("accessToken") != null && @HttpContextAccessor.HttpContext.Session.GetString("accessToken") != "")
+                {
+                    <button class="navbar-toggler" style="background-color:white" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                }
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    @if (@HttpContextAccessor.HttpContext.Session.GetString("accessToken") != null && @HttpContextAccessor.HttpContext.Session.GetString("accessToken") != "")
+                    {
+                        <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link header-palette" href="/">Пациенты</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link header-palette" href="/consultation/">Консультация</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link header-palette" href="/reports/">Отчеты</a>
+                            </li>
+                            <li class="nav-item" id="btnCreate">
+                                <a class="nav-link header-palette" href="/statistics/">Статистика</a>
+                            </li>
+                        </ul>
+                        <ul id='loginedPanel' class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <li class="nav-item header-palette dropdown">
+                                <a id="headerEmail" class="nav-link dropdown-toggle header-palette truncate" data-bs-toggle="dropdown" href="#">
+                                    @HttpContextAccessor.HttpContext.Session.GetString("name")
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="/profile/">Профиль</a></li>
+                                    <li><a class="dropdown-item" href="#" id="logoutBtn">Выйти</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul id='notloginedPanel' class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link header-palette" href="/login">Войти</a>
+                            </li>
+                        </ul>
+                    }
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container" id="content">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container stand-alone">
+            &copy; 2023 - Site made by <a href"#">Viktoria Bukharova</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/jquery.maskedinput/jquery.maskedinput.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

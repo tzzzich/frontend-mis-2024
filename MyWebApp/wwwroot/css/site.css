@@ -1,0 +1,553 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+main {
+    padding-bottom:80px;
+}
+
+header {
+    margin-bottom:1em;
+    color:white;
+    background-color:blue;
+}
+
+footer {
+    padding-top:1em;
+    display:block;
+    clear:both;
+}
+
+
+
+.container {
+    max-width:1100px;
+}
+
+h1 {
+    color: #333;
+}
+
+p {
+    color: #666;
+}
+.form-button {
+    margin: 0 auto;
+    width:100%;
+    justify-content: center;
+    display: flex;
+}
+.button-self {
+    min-width: 30%;
+    margin:0.25em
+}
+
+.form-container {
+    display: table;
+    width: 100%;
+}
+
+.form-row {
+    display: table-row;
+    padding: 10px;
+    width:100%;
+}
+
+.form-cell {
+    display: table-cell;
+}
+
+.form-cell label {
+    display: block;
+}
+
+.form-cell input[type="text"],
+.form-cell textarea {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.form-cell button {
+    padding: 5px 10px;
+}
+
+.stand-alone{
+    width:100%;
+    clear:both;
+    overflow:hidden;
+    padding:0.2em 0 0.2em 0;
+}
+
+.col-left{
+    float:left;
+    width:49%;
+}
+
+.col-right{
+    float:right;
+    width:49%;
+}
+.form-label{
+    margin:0;
+    color:rgb(128, 128, 128);
+    font-size:small;
+}
+
+.header-palette {
+    color: white !important;
+    background-color: rgb(4 19 95);
+}
+
+@media screen and (max-width: 600px) {
+
+    .col-left,
+    .col-right,
+    .left,
+    .right {
+        width: 100%;
+        float:none;
+    }
+}
+@media (max-width: 600px) {
+    .navbar-expand-sm .navbar-collapse {
+        display: none!important;
+    }
+}
+
+@media(max-width:600px) {
+    .navbar-expand-sm .navbar-toggler {
+        display:initial;
+    }
+}
+
+/*Стили для выбора списка специальностей*/
+.searchItem {
+    color: #1e7ad3;
+    text-decoration: none;
+}
+
+.searchItem:hover {
+    text-decoration: underline
+}
+
+
+.search {
+    position: relative;
+}
+
+.search input {
+    width: 100%;
+}
+
+.search input:focus {
+    outline: none;
+    border-color: #66b1ee;
+    -webkit-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+    -moz-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+    -ms-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+    -o-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+    box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+}
+
+.search input:focus + .spec-results {
+    display: block
+}
+
+.search .spec-results {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 0;
+    margin: 0;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #cbcfe2 #c8cee7 #c4c7d7;
+    border-radius: 0.3em;
+    background-color: #fdfdfd;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    -ms-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    -o-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.spec-results option:hover {
+    background-color: blue;
+    color: white;
+}
+
+.spec-results:hover {
+    display: block;
+}
+
+.truncate {
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.content-header {
+    padding: 0 12px 0 12px;
+    box-shadow: rgb(128, 128, 128) 10px 10px initial;
+    background-color: white !important;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.column-left {
+    width: 50%;
+    padding-right: 2px;
+    justify-content: flex-start;
+    display:inline-block;
+    float:left;
+}
+
+.column-right {
+    width: 50%;
+    padding-left: 2px;
+    justify-content: flex-end;
+    display:inline-block;
+    float:right;
+}
+
+.colums-container {
+    /*display: flex;
+    flex-direction: row;*/
+    display:block;
+}
+
+.content-container {
+    box-shadow: rgb(128, 128, 128) 10px 10px initial;
+    background-color: lightgray;
+    border-radius: 0.3em;
+    padding: 12px;
+    margin-top: 12px;
+}
+
+.content-container a label,
+.content-container label {
+    display:block;
+    font-size: small;
+    cursor: inherit;
+}
+
+.patient-box a {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.patient-box {
+    cursor: pointer;
+}
+
+
+.patient-box:hover {
+    background-color: darkgrey;
+}
+/*Слайдер Чекбокс*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/*Двусторонний слайдер*/
+.slider-twosided {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #2196F3;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider-twosided:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider-twosided {
+    background-color: #2196F3;
+}
+
+input:focus + .slider-twosided {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider-twosided:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider-twosided.round {
+    border-radius: 34px;
+}
+
+.slider-twosided.round:before {
+    border-radius: 50%;
+}
+/*Модальное окно*/
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: none;
+    width: 500px; /* Could be more or less, depending on screen size */
+    background-color: rgba(0,0,0,0.0);
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 3em;
+    padding-left: 0.1em;
+    padding-top: 0;
+    padding-bottom: 0.6em;
+    line-height: 0.9em;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*Пагинация*/
+.pagination-item {
+    display: block;
+    text-decoration: none;
+    border: 1px solid lightgrey;
+    color: black;
+    float: left;
+    width: 25px;
+    height: 25px;
+    margin: 0 2px;
+}
+
+.pagination-item-current {
+    display: block;
+    text-decoration: none;
+    border: 1px solid lightblue;
+    color: lightblue;
+    float: left;
+    width: 25px;
+    height: 25px;
+    margin: 0 2px;
+}
+
+.pagination-space {
+    display: block;
+    color: black;
+    width: 30px;
+    height: 25px;
+    float: left;
+}
+
+.pagination-item:hover {
+    color: white;
+    background-color: lightblue;
+}
+
+.pagination-container {
+    text-align: center;
+}
+
+.pagination-container div {
+    display: inline-block;
+    margin-top: 1em;
+}
+
+/*Список осмотров*/
+.inspection-box {
+    color: black;
+    text-decoration: none;
+    font-size: smaller;
+}
+.death {
+    color: black;
+    text-decoration: none;
+    font-size: smaller;
+    background-color: rgb(168, 138, 21)
+}
+
+.inspection-box a {
+    color: deepskyblue;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.hidden-block {
+    display:none;
+}
+
+.inspection-expander {
+    width: 15px;
+    height: 15px;
+    display: inline-flex;
+    float: left;
+    justify-content: center;
+    vertical-align: central;
+    font-size: larger;
+    text-align: center;
+    cursor: pointer;
+    line-height: 15px;
+    margin-right: 2px;
+    padding-bottom: 1em;
+    color: white;
+    background-color: deepskyblue;
+}
+
+.outlined:before {
+    content: "\00a0\00a0\A\00a0\00a0";
+    border-left: 1px dotted grey;
+    border-bottom: 1px dotted grey;
+    position: absolute;
+    margin-left: -32px;
+    margin-top: -22px;
+}
+
+.btn:disabled{
+    background-color:lightgray;
+    color:darkgray;
+    border-color:gray;
+}
+
+
+@media screen and (max-width: 600px) {
+    .colums-container {
+        flex-direction: column;
+    }
+    .column-left,
+    .column-right{
+        width:100%
+    }
+
+}
+
+.icon{
+    fill:deepskyblue;
+    height:30px;
+    margin-bottom:5px;
+}
+
+.deepblue{
+    color:deepskyblue!important;
+}
+
+.blue{
+    font-size:large;
+    font-weight:bold;
+    color:blue;
+}

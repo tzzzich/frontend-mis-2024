@@ -1,0 +1,57 @@
+﻿@model MyWebApp.Models.DoctorModel
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<main class="form-signin">
+    <div class="d-flex container justify-content-center">
+        <div class="card shadow" style="width: 50rem;">
+            <div class="card-body">
+                <h2 class="card-title">Профиль</h2>
+        <form class="form-container" data-ajax="true" data-ajax-method="post" data-ajax-success="onSaveSuccess" data-ajax-failure="onSaveFailed" data-ajax-url="/profile/save">
+            <div asp-validation-summary="ModelOnly" class="text-danger row"></div>
+                    <div id="errors" class="text-danger row d-none"></div>
+                    <div id="success" class="text-success row d-none"><span>Данные сохранены успешно</span></div>
+                    <div class="mb-3 stand-alone">
+                        <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="stand-alone">
+                        <div class="mb-3 col-left">
+                            <label asp-for="Gender" class="form-label"></label>
+                            <select asp-for="Gender" class="form-control">
+                        <option value="Male" selected>Мужской</option>
+                        <option value="Female">Женский</option>
+                    </select>
+                </div>
+                        <div class="mb-3 col-right" style="align-self:flex-end">
+                            <label asp-for="Birthday" class="form-label"></label>
+                    <input asp-for="Birthday" type="date" class="form-control" />
+                    <span asp-validation-for="Birthday" class="text-danger"></span>
+                </div>
+            </div>
+                    <div class="mb-3 stand-alone">
+                        <label asp-for="Phone" class="form-label"></label>
+                <input asp-for="Phone" class="form-control phone-mask" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+                    <div class="mb-3 stand-alone">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+                    <div class="mb-3 stand-alone">
+                        <input id="submitBtn" type="submit" value="Сохранить изменения" class="btn btn-primary btn-block stand-alone" />
+            </div>
+        </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="~/js/profile.js" asp-append-version="true"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

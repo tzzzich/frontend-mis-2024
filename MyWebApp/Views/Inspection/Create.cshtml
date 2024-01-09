@@ -1,0 +1,98 @@
+﻿@model InspectionCreateForViewModel
+@{
+    ViewData["Title"] = "Создание осмотра";
+}
+<div class="content-header">
+    <div class="stand-alone">
+        <div class="left">
+            <h2>Создание осмотра</h2>
+        </div>
+    </div>
+</div>
+<form id="createInspectionForm" data-ajax="true" data-ajax-method="post" data-ajax-success="onCreateSuccess" data-ajax-failure="onCreateFailed" data-ajax-url="/inspection/create">
+    <div class="content-container" style="clear:both">
+        <div class="stand-alone">
+            <div class="left">
+                @{
+                    var gender = Model.Patient.Gender == "Male" ? "mars" : "venus";
+                }
+                <h4>
+                    @Model.Patient.Name
+                    @if (Model.Patient.Gender == "Male")
+                    {
+                        <svg class="icon" version="1.0" xmlns="http://www.w3.org/2000/svg"
+                             width="32.000000pt" height="32.000000pt" viewBox="0 0 32.000000 32.000000"
+                             preserveAspectRatio="xMidYMid meet">
+
+                            <g transform="translate(0.000000,32.000000) scale(0.100000,-0.100000)"
+                               stroke="none">
+                                <path d="M223 283 c20 -2 37 -8 37 -12 0 -4 -18 -24 -39 -45 -33 -32 -42 -36
+                                    -59 -27 -72 38 -152 -35 -121 -111 6 -16 25 -36 41 -44 76 -39 157 43 117 118
+                                    -9 17 -5 26 27 59 21 21 41 39 45 39 4 0 10 -17 12 -37 3 -31 4 -29 5 15 l2
+                                    52 -52 -2 c-44 -1 -46 -2 -15 -5z m-70 -94 c24 -11 47 -47 47 -73 0 -7 -9 -25
+                                    -21 -40 -26 -33 -86 -37 -113 -7 -28 30 -24 80 8 108 30 26 44 28 79 12z" />
+                            </g>
+                        </svg>
+                    }
+                    else
+                    {
+                        <svg class="icon" version="1.0" xmlns="http://www.w3.org/2000/svg"
+                             width="32.000000pt" height="32.000000pt" viewBox="0 0 32.000000 32.000000"
+                             preserveAspectRatio="xMidYMid meet">
+
+                            <g transform="translate(0.000000,32.000000) scale(0.100000,-0.100000)"
+                               stroke="none">
+                                <path d="M102 290 c-12 -11 -25 -32 -28 -46 -9 -36 19 -92 51 -100 19 -5 25
+                                    -13 25 -34 0 -25 -4 -29 -32 -33 l-33 -4 33 -1 c27 -2 32 -6 32 -27 0 -14 5
+                                    -25 10 -25 6 0 10 11 10 24 0 20 6 25 33 29 l32 4 -32 1 c-29 2 -33 5 -33 31
+                                    0 23 6 30 25 35 32 8 60 64 51 100 -15 62 -98 88 -144 46z m97 0 c31 -16 45
+                                    -64 29 -97 -40 -84 -174 -29 -138 58 19 46 66 63 109 39z" />
+                            </g>
+                        </svg>
+                    }
+                </h4>
+            </div>
+            <div class="right">
+                <span>
+                    Дата рождения: @Model.Patient.Birthday.GetValueOrDefault().ToString("dd.MM.yyy")
+                </span>
+            </div>
+        </div>
+        <div class="stand-alone">
+            <div asp-validation-summary="ModelOnly" class="text-danger row"></div>
+            <div id="errors" class="text-danger row d-none"></div>
+            <div id="success" class="text-success row d-none"><span>Данные сохранены успешно</span></div>
+        </div>
+        <div class="stand-alone">
+            <div class="left" style="line-height:3">    
+                <span class="form-label" id="primaryLabel" style="padding-left:0.5em;display:inline-block"> Первичный осмотр </span>
+                    <label class="switch" style="display:inline-block">
+                        <input id="IsSecondary" type="checkbox" checked="@Model.IsSecond" />
+                        <span class="slider-twosided round"></span>
+                    </label>
+                <span class="form-label" id="secondaryLabel" style="padding-right:0.5em;display:inline-block">  Повторный осмотр  </span>
+            </div>
+        </div>
+        <div class="stand-alone">
+            <div class="left">
+                <label asp-for="Inspection.Date" class="form-label">Дата осмотра</label>
+                <input asp-for="Inspection.Date" type="datetime-local" >
+                <span asp-validation-for="Inspection.Date" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="content-container" style="clear:both">
+        <div class="stand-alone">
+                <label asp-for="Inspection.Complaints" class="form-label blue">Жалобы</label>
+                <textarea asp-for="Inspection.Complaints" rows="3" width="100%"></textarea>
+                <span asp-validation-for="Inspection.Complaints" class="text-danger"></span>
+        </div>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Кнопка" />
+</form>
+@section Scripts {
+    <script src="~/js/inspectionCreate.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,13 @@
+﻿@model Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary.ValueEnumerable
+@{
+    Layout = null;
+}
+<h4>Возникли ошибки валидации</h4>
+@foreach(var val in Model)
+{
+    @foreach(var err in val.Errors)
+    {
+        <span>@err.ErrorMessage</span>
+        <br/>
+    }
+}

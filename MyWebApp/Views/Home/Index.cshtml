@@ -1,0 +1,233 @@
+﻿@model PatientPagedListModel
+@{
+    ViewData["Title"] = "Список пациентов";
+    PatientsFilterModel filter = ViewBag.Filter;
+    //if (filter == null) filter = new PatientsFilterModel();
+}
+<!-- Фильтр -->
+<div class="content-header">
+    <div class="left">
+        <h2>Пациенты</h2>
+    </div>
+    <div class="right">
+        <button class="btn btn-primary" id="btnRegister">
+            <svg viewBox="0 0 500 500" style="height:1.6em;margin:0 0 0.2em -0.4em" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+                    <path stroke="#FFF" fill="#FFF" d="m256.09,266a99.83,99.83 0 1 0 -70.66,-29.22a99.61,99.61 0 0 0 70.66,29.22zm-54.62,-154.44a77.24,77.24 0 1 1 -22.62,54.61a77,77 0 0 1 22.62,-54.61z" id="svg_1" />
+                    <path stroke="#FFF" fill="#FFF" d="m256.09,281.83c-84.6,0 -153.43,68.82 -153.43,153.42a11.34,11.34 0 0 0 11.34,11.34l284.17,0a11.34,11.34 0 0 0 11.34,-11.34c0,-84.6 -68.83,-153.42 -153.42,-153.42zm-130.26,142.08c5.76,-66.8 62,-119.4 130.26,-119.4s124.49,52.6 130.25,119.4l-260.51,0z" id="svg_2" />
+                    <text fill="#FFF" font-family="Serif" font-size="195" font-weight="bold" id="svg_3" stroke="#FFF" stroke-width="0" text-anchor="middle" x="384.5" xml:space="preserve" y="323">+</text>
+            </svg>
+            Регистрация нового пациента
+        </button>
+    </div>
+</div>
+<div class="content-container" style="clear:both">
+    <div class="stand-alone"><h4 class="text-black">Фильтры и сортировка</h4></div>
+    <form id="filterForm">
+        <div class="stand-alone">
+            <div class="col-left">
+                <label for="Name" class="form-label" placeholder="Иванов Иван Иванович">Имя</label>
+                <input id="Name" name="Name" class="form-control" value="@filter.Name" />
+            </div>
+            <div class="col-right">
+                <label for="Conclusions" class="form-label">Имеющиеся заключения</label>
+                <select id="Conclusions" class="form-control" name="Conclusions">
+                    <option value="placeholder">Выберите заключение</option>
+                    @{
+                        string recoverySelected = (filter.Conclusions!=null && filter.Conclusions.Contains<string>("Recovery")) ? "selected" : "";
+                        string deseaseSelected = (filter.Conclusions != null && filter.Conclusions.Contains<string>("Disease")) ? "selected" : "";
+                        string deathSelected = (filter.Conclusions!=null && filter.Conclusions.Contains<string>("Death")) ? "selected" : "";
+                    }
+    
+                    <!option value="Recovery" @recoverySelected>Выздоровление</!option>
+                    <!option value="Disease" @deseaseSelected>Болезнь</!option>
+                    <!option value="Death" @deathSelected>Смерть</!option>
+                </select>
+            </div>
+        </div>
+        <div class="stand-alone">
+            <div class="left" style="padding-top:1.5em">
+                <label class="switch">
+                    <input id="ScheduledVisits" type="checkbox" name="ScheduledVisits" checked="@filter.ScheduledVisits.GetValueOrDefault()">
+                    <span class="slider round"></span>
+                </label>
+                <span class="form-label" style="padding-top:3em"> Есть запланированные визиты  </span>
+            </div>
+            <div class="left" style="padding-top:1.5em">
+                <label class="switch">
+                    <input id="OnlyMine" type="checkbox" name="OnlyMine" checked="@filter.OnlyMine.GetValueOrDefault()">
+                    <span class="slider round"></span>
+                </label>
+                <span class="form-label" style="margin-top:3em"> Мои пациенты </span>
+            </div>
+            <div class="right">
+                <label for="Sorting" class="form-label">Сортировка пациентов</label>
+                <select id="Sorting" class="form-control" name="Sorting">
+                    <option value="placeholder">Выбирете порядок сортировки</option>
+                    @{
+                        string nameAscSelected = (filter.Sorting == "NameAsc") ? "selected" : "";
+                        string nameDescSelected = (filter.Sorting == "NameDesc") ? "selected" : "";
+                        string createAscSelected = (filter.Sorting == "CreateAsc") ? "selected" : "";
+                        string createDescSelected = (filter.Sorting == "CreateDesc") ? "selected" : "";
+                        string inspectionAscSelected = (filter.Sorting == "InspectionAsc") ? "selected" : ""; ;
+                        string inspectionDescSelected = (filter.Sorting == "InspectionDesc") ? "selected" : ""; ;
+                    }
+                    <!option value="NameAsc" @nameAscSelected>По имени (А-Я)</!option>
+                    <!option value="NameDesc" @nameDescSelected>По имени (Я-А)</!option>
+                    <!option value="CreateAsc" @createAscSelected>По дате добавления (сначала старые)</!option>
+                    <!option value="CreateDesc" @createDescSelected>По дате добавления (сначала новые)</!option>
+                    <!option value="InspectionAsc" @inspectionAscSelected>По осмотрам (по возрастанию)</!option>
+                    <!option value="InspectionDesc" @inspectionDescSelected>По осмотрам (по убыванию)</!option>
+                </select>
+            </div>
+        </div>
+        <div class="stand-alone">
+            <div class="left">
+                <label for="Size" class="form-label">Число пациентов на странице</label>
+                <select id="Size" class="form-control" name="Size">
+                    @{
+                        string[] size = new string[] { "4", "5", "10", "20", "50", "100" };
+                        foreach (string sizeItem in size)
+                        {
+                            if (sizeItem == Model.Pagination.Size.ToString())
+                            {
+                                <option value="@sizeItem" selected>@sizeItem</option>
+                            }
+                            else
+                            {
+                                <option value="@sizeItem">@sizeItem</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="right">
+                <button id="searchBtn" class="btn btn-primary" style="width:15em;margin-top:1.5em">Поиск</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Список пациентов -->
+@{
+    int count = Model.Patients.Count;
+    int i = 0;
+}
+<div class="colums-container">
+@if (Model != null)
+{
+    <div class="column-left">
+    @foreach (var patient in Model.Patients)
+    {
+        string gender = patient.Gender == "Male" ? "Мужчина" : "Женщина";
+        string birthday = patient.Birthday.GetValueOrDefault().ToString("dd.MM.yyyy");
+        @if (i < count%2 + count / 2)
+        {
+            <div class="content-container patient-box">
+                <a href="/patient/@patient.Id" style="cursor:inherit">
+                    <label style="font-weight:bold;font-size:medium">@patient.Name</label>
+                    <label>Email - <span style="font-weight:bold">А нету почты у пациентов</span></label>
+                    <label>Пол - <span style="font-weight:bold">@gender</span></label>
+                    <label>Дата рождения - <span style="font-weight:bold">@birthday</span></label>
+                </a>
+            </div>
+        }
+        i += 1;
+    }
+    </div>
+    <div class="column-right">
+    @{
+        i = 0;
+    }
+    @foreach (var patient in Model.Patients)
+    {
+        string gender = patient.Gender == "Male" ? "Мужчина" : "Женщина";
+        string birthday = patient.Birthday.GetValueOrDefault().ToString("dd.MM.yyyy");
+        @if (i >= count % 2 + count / 2)
+        {
+            <div class="content-container patient-box">
+                <a href="/patient/@patient.Id" style="cursor:inherit">
+                            <label style="font-weight:bold;font-size:medium">@patient.Name</label>
+                            <label>Email - <span style="font-weight:bold">А нету почты у пациентов</span></label>
+                            <label>Пол - <span style="font-weight:bold">@gender</span></label>
+                            <label>Дата рождения - <span style="font-weight:bold">@birthday</span></label>
+                </a>
+            </div>
+        }
+        i += 1;
+    }
+    </div>
+}
+</div>
+<!--Пагинация-->
+@{
+    filter.Page = null;
+    filter.Size = null;
+    string urlParams = MyWebApp.Utils.UriParamsParser.ParsFromeObjectFields(filter);
+    urlParams = urlParams != "" ? $"{urlParams}&" : "?";
+    string currPageSizeParam;
+    bool startDotsPlaced = false;
+    bool endDotsPlaced = false;
+}
+<div class="stand-alone pagination-container">
+    <div>
+    @if (Model.Pagination.Current > 1)
+    {
+        currPageSizeParam = $"{urlParams}page=1&size={Model.Pagination.Size}";
+        <a class="pagination-item" href="@currPageSizeParam">&lt;</a>
+    }
+    @for(int pageN = 1; pageN <= Model.Pagination.Count; pageN++)
+    {
+        currPageSizeParam = $"{urlParams}page={pageN}&size={Model.Pagination.Size}";
+        if (pageN == Model.Pagination.Current)
+        {
+            <a class="pagination-item-current" href="">@pageN</a>
+        }
+        else if (pageN < 3 || pageN+1>=Model.Pagination.Count)
+        {
+            <a class="pagination-item" href="@currPageSizeParam">@pageN</a>
+        }
+        else if (pageN + 3 >= Model.Pagination.Current && pageN - 3 <= Model.Pagination.Current)
+        {
+            <a class="pagination-item" href="@currPageSizeParam">@pageN</a>
+        }
+        else if (pageN < Model.Pagination.Current && !startDotsPlaced)
+        {
+            <span class="pagination-space"> ... </span>
+            startDotsPlaced = true;
+        }
+        else if (pageN > Model.Pagination.Current && !endDotsPlaced)
+        {
+            <span class="pagination-space"> ... </span>
+            endDotsPlaced = true;
+        }
+
+    }
+    @if (Model.Pagination.Current < Model.Pagination.Count)
+    {
+        currPageSizeParam = $"{urlParams}page={Model.Pagination.Count}&size={Model.Pagination.Size}";
+        <a class="pagination-item" href="@currPageSizeParam">&gt;</a>
+    }
+    </div>
+</div>
+
+<!-- Модалка с созданием пациента -->
+@{
+    var newPatient = new PatientCreateModel();
+}
+<div id="patientCreateModal" class="modal">
+    <div class="modal-content">
+        <div class="stand-alone"><span class="close">&times;</span></div>
+        <div class="content-container">
+            <div id="modalFormHolder" class="stand-alone">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/home.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+

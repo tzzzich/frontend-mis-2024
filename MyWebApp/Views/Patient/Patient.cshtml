@@ -1,0 +1,189 @@
+﻿@model PatientForViewModel
+@{
+    ViewData["Title"] = $"Пациент {Model.Patient.Name}";
+    var filter = Model.Filter;
+    ViewData["IsDead"] = Model.Inspections.IsDead;
+    string dead = Model.Inspections.IsDead ? "disabled" : "";
+}
+<!-- Фильтр -->
+<div class="content-header">
+    <div class="stand-alone">
+        <div class="left">
+            <h2>Медицинская карта пациента</h2>
+        </div>
+        <div class="right">
+            <button class="btn btn-primary" onclick="inspectionCreateRederict('@Model.Patient.Id.ToString()', 'false')" id="btnAddInspection" @dead>Добавить осмотр</button>
+        </div>
+    </div>
+    <div class="stand-alone">
+        <div class="left">
+            @{
+                var gender = Model.Patient.Gender == "Male" ? "mars" : "venus";
+            }
+            <h4>
+                @Model.Patient.Name
+                <img src="/images/@gender-icon.png" height="25" />
+            </h4>
+        </div>
+        <div class="right">
+            <span>Дата рождения: @Model.Patient.Birthday.GetValueOrDefault().ToString("dd.MM.yyy")
+            </span>
+        </div>
+    </div>
+</div>
+<div class="content-container" style="clear:both">
+    <div class="stand-alone"><h4 class="text-black">Фильтры и сортировка</h4></div>
+    <form id="filterForm">
+        <div class="stand-alone">
+            <div class="col-left">
+                <label for="IcdRoots" class="form-label">МКБ-10</label>
+                <select id="IcdRoots" class="form-control" name="IcdRoots">
+                    <option value="placeholder">Выбрать</option>
+                    @foreach (var icd10Record in Model.Icd10RootsList)
+                    {
+                        string selected = "";
+                        if (filter != null && filter.IcdRoots!=null) selected = filter.IcdRoots.Contains<string>(icd10Record.Id) ? "selected" : "";
+                        <!option value="@icd10Record.Id" @selected>(@icd10Record.Code) @icd10Record.Name</!option>   
+                    }
+                </select>
+            </div>
+            <div class="col-right" style="padding-top:1.5em">
+                <fieldset>
+                    @{
+                        string grouped = "";
+                        string showAll = "";
+                        if (filter.Grouped.GetValueOrDefault()) grouped = "checked";
+                        else showAll = "checked";
+                    }
+                    <div class="left">
+                        <input type="radio" id="grouped" name="Grouped" value="true" @grouped/>
+                        <label class="form-label" style="display:inline-block">Отсортировать по повторным</label>
+                    </div>
+                    <div class="right">
+                        <input type="radio" id="showAll" name="Grouped" value="false" @showAll/>
+                        <label class="form-label" style="display:inline-block">Показать все</label>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="stand-alone">
+            <div class="left">
+                <label for="Size" class="form-label">Число осмотров на странице</label>
+                <select id="Size" class="form-control" name="Size">
+                    @{
+                        int[] size = new int[] { 4, 5, 10, 20, 50, 100 };
+                        foreach(int s in size)
+                        {
+                            if(s == Model.Inspections.Pagination.Size)
+                            {
+                                <option value="@s" selected>@s</option>
+                            }
+                            else
+                            {
+                                <option value="@s">@s</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="right">
+                <button id="searchBtn" class="btn btn-primary" style="width:15em;margin-top:1.5em">Поиск</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Список пациентов -->
+@{
+    int count = Model.Inspections.Inspections.Count;
+    int i = 0;
+    ViewData["Grouping"] = filter.Grouped.GetValueOrDefault();
+}
+@if (Model != null)
+{
+    <div class="colums-container">
+        <div class="column-left">
+            @foreach (var inspection in Model.Inspections.Inspections)
+            {
+                if (i < count % 2 + count / 2)
+                {
+                    Html.RenderPartial("InspectionListItem", new RenderInspectionModel() { Inspection = inspection, Level = 0 });
+                }
+
+                i += 1;
+            }
+        </div>
+        @{
+            i = 0;
+        }
+        <div class="column-right">
+            @foreach (var insp in Model.Inspections.Inspections)
+            {
+
+                if (i >= count % 2 + count / 2)
+                {
+                    Html.RenderPartial("InspectionListItem", new RenderInspectionModel() { Inspection = insp, Level = 0 });
+                }
+
+                i += 1;
+            }
+        </div>
+        
+    </div>
+}
+<!--Пагинация-->
+@{
+    filter.Page = null;
+    filter.Size = null;
+    string urlParams = MyWebApp.Utils.UriParamsParser.ParsFromeObjectFields(filter);
+    urlParams = urlParams != "" ? $"{urlParams}&" : "?";
+    string currPageSizeParam;
+    bool startDotsPlaced = false;
+    bool endDotsPlaced = false;
+}
+<div class="stand-alone pagination-container">
+    <div>
+        @if (Model.Inspections.Pagination.Current > 1)
+        {
+            currPageSizeParam = $"{urlParams}page=1&size={Model.Inspections.Pagination.Size}";
+            <a class="pagination-item" href="@currPageSizeParam">&lt;</a>
+        }
+        @for (int pageN = 1; pageN <= Model.Inspections.Pagination.Count; pageN++)
+        {
+            currPageSizeParam = $"{urlParams}page={pageN}&size={Model.Inspections.Pagination.Size}";
+            if (pageN == Model.Inspections.Pagination.Current)
+            {
+                <a class="pagination-item-current" href="">@pageN</a>
+            }
+            else if (pageN < 3 || pageN + 1 >= Model.Inspections.Pagination.Count)
+            {
+                <a class="pagination-item" href="@currPageSizeParam">@pageN</a>
+            }
+            else if (pageN + 3 >= Model.Inspections.Pagination.Current && pageN - 3 <= Model.Inspections.Pagination.Current)
+            {
+                <a class="pagination-item" href="@currPageSizeParam">@pageN</a>
+            }
+            else if (pageN < Model.Inspections.Pagination.Current && !startDotsPlaced)
+            {
+                <span class="pagination-space"> ... </span>
+                startDotsPlaced = true;
+            }
+            else if (pageN > Model.Inspections.Pagination.Current && !endDotsPlaced)
+            {
+                <span class="pagination-space"> ... </span>
+                endDotsPlaced = true;
+            }
+
+        }
+        @if (Model.Inspections.Pagination.Current < Model.Inspections.Pagination.Count)
+        {
+            currPageSizeParam = $"{urlParams}page={Model.Inspections.Pagination.Count}&size={Model.Inspections.Pagination.Size}";
+            <a class="pagination-item" href="@currPageSizeParam">&gt;</a>
+        }
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/patient.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
