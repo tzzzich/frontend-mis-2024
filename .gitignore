@@ -1,0 +1,137 @@
+﻿*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+nupkg/
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Visual Studio
+.vs/
+/.vs
+
+# Fleet
+.fleet/
+
+# Code Rush
+.cr/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# Ignore temporary files and directories
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Ignore generated build files and dependencies
+dist/
+build/
+*.log
+npm-debug.log*
+
+# Ignore local configuration files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore editor-specific directories and files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore package manager lock files
+package-lock.json
+yarn.lock
+
+# Ignore generated HTML and build files
+*.html
+*.htm
+*.shtml
+*.xml
+*.txt
+
+# Ignore log and report files
+*.log
+*.sql
+*.sqlite
+
+# Ignore editor configuration files
+.editorconfig
+
+# Ignore files created by local servers and development environments
+.local/
+.tmp/
+
+#Bootstrap
+
+# Ignore docs files
+/_site/
+# Hugo files
+/resources/
+/.hugo_build.lock
+
+# Numerous always-ignore extensions
+*.diff
+*.err
+*.log
+*.orig
+*.rej
+*.swo
+*.swp
+*.vi
+*.zip
+*~
+
+# OS or Editor folders
+._*
+.cache
+.DS_Store
+.idea
+.project
+.settings
+.tmproj
+*.esproj
+*.sublime-project
+*.sublime-workspace
+nbproject
+Thumbs.db
+/.vscode/
+# Local Netlify folder
+.netlify
+
+# Komodo
+.komodotools
+*.komodoproject
+
+# Folders to ignore
+/dist-sass/
+/js/coverage/
+/node_modules/
+
