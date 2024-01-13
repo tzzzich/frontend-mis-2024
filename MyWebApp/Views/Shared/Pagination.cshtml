@@ -1,0 +1,54 @@
+﻿@using MyWebApp.Models.ViewModels
+@model PaginationForViewModel
+@{
+    Layout = null;
+    Model.Filter.Page = null;
+    Model.Filter.Size = null;
+    string urlParams = MyWebApp.Utils.UriParamsParser.ParsFromeObjectFields(Model.Filter);
+    urlParams = urlParams != "" ? $"{urlParams}&" : "?";
+    string currPageSizeParam;
+    bool startDotsPlaced = false;
+    bool endDotsPlaced = false;
+}
+
+<div class="stand-alone pagination-container">
+    <div>
+        @if (Model.PageInfo.Current > 1)
+        {
+            currPageSizeParam = $"{urlParams}page=1&size={Model.PageInfo.Size}";
+            <a class="pagination-item" href="@currPageSizeParam">&lt;</a>
+        }
+        @for (int pageN = 1; pageN <= Model.PageInfo.Count; pageN++)
+        {
+            currPageSizeParam = $"{urlParams}page={pageN}&size={Model.PageInfo.Size}";
+            if (pageN == Model.PageInfo.Current)
+            {
+                <a class="pagination-item current" href="">@pageN</a>
+            }
+            else if (pageN < 3 || pageN + 1 >= Model.PageInfo.Count)
+            {
+                <a class="pagination-item" href="@currPageSizeParam">@pageN</a>
+            }
+            else if (pageN + 3 >= Model.PageInfo.Current && pageN - 3 <= Model.PageInfo.Current)
+            {
+                <a class="pagination-item" href="@currPageSizeParam">@pageN</a>
+            }
+            else if (pageN < Model.PageInfo.Current && !startDotsPlaced)
+            {
+                <span class="pagination-space"> ... </span>
+                startDotsPlaced = true;
+            }
+            else if (pageN > Model.PageInfo.Current && !endDotsPlaced)
+            {
+                <span class="pagination-space"> ... </span>
+                endDotsPlaced = true;
+            }
+
+        }
+        @if (Model.PageInfo.Current < Model.PageInfo.Count)
+        {
+            currPageSizeParam = $"{urlParams}page={Model.PageInfo.Count}&size={Model.PageInfo.Size}";
+            <a class="pagination-item" href="@currPageSizeParam">&gt;</a>
+        }
+    </div>
+</div>

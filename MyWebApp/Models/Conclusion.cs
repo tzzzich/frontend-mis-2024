@@ -4,8 +4,11 @@ namespace MyWebApp.Models
 {
     public enum Conclusion
     {
-        Disease, 
-        Recovery, 
+        [Display(Name ="Выздоровление")]
+        Recovery,
+        [Display(Name = "Болезнь")]
+        Disease,
+        [Display(Name = "Смерть")]
         Death
     }
 }

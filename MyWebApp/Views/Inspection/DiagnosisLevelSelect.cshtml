@@ -1,0 +1,15 @@
+﻿@using MyWebApp.Models.ViewModels
+@model DiagnosisLevelListModel
+@{
+    Layout = null;
+    string selectId = $"diagSelect_level_{Model.Level}_{Model.Position}";
+    string holderId = $"innder_{Model.Level}_{Model.Position}";
+}
+<select id="@selectId" onchange="selectChanged(@Model.Level, @Model.Position, this)">
+    <option disabled selected>Выберите диагноз</option>
+    @foreach (var diag in Model.Diagnoses)
+    {
+        <option value="@diag.Id">(@diag.Code) - @diag.Name</option>
+    }
+</select>
+<div id="@holderId" class="input-max"></div>

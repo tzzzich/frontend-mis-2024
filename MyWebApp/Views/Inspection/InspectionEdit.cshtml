@@ -1,0 +1,106 @@
+﻿@using MyWebApp.Models.ViewModels
+@model InspectionEditModel
+@{
+    Layout = null;
+    var DiagsList = new List<DiagItemForEditView>();
+    if (ViewBag.Diagnoses != null)
+    {
+        DiagsList = ViewBag.Diagnoses;
+    }
+    int counter = 0;
+    string inspectionId = ViewBag.InspectionId;
+}
+<div class="content-header">
+    <div class="stand-alone">
+        <div class="left">
+            <h2>Редактирование осмотра</h2>
+        </div>
+    </div>
+</div>
+<form id="editInspectionForm" data-ajax="true" data-ajax-method="post" data-ajax-success="onEditSuccess" data-ajax-failure="onEditFailed" data-ajax-url="/Inspection/Edit/@inspectionId">
+    <div class="stand-alone">
+        <div asp-validation-summary="ModelOnly" class="text-danger row"></div>
+        <div id="errors" class="text-danger row hidden"></div>
+        <div id="success" class="text-success row hidden"><span>Данные сохранены успешно</span></div>
+    </div>
+    <div class="content-container" style="clear:both">
+        <div class="stand-alone input-max">
+            <label asp-for=Complaints class="form-label blue"><h3>Жалобы</h3></label>
+            <textarea asp-for=Complaints rows="3"></textarea>
+            <span asp-validation-for=Complaints class="text-danger"></span>
+        </div>
+    </div>
+    <div class="content-container" style="clear:both">
+        <div class="stand-alone input-max">
+            <label asp-for=Anamnesis class="form-label blue"><h3>Анамнез</h3></label>
+            <textarea asp-for=Anamnesis rows="3"></textarea>
+            <span asp-validation-for=Anamnesis class="text-danger"></span>
+        </div>
+    </div>
+    <div class="content-container" style="clear:both">
+        <div class="stand-alone input-max">
+            <label class="form-label blue"><h3>Диагнозы</h3></label>
+            @if (DiagsList != null)
+            {
+                foreach (var diag in DiagsList)
+                {
+                    var type = diag.Diagnosis.Type;
+                    type = type == "Main" ? "Основной" : type == "Concomitant" ? "Сопутствующий" : "Осложнения";
+                    <h3>(@diag.Diagnosis.Code) @diag.Diagnosis.Name</h3>
+                    <label class="form-label">Тип в осмотре: @type</label>
+                    <label class="form-label">Расшифровка: @diag.Diagnosis.Description</label>
+                    <input name="Diagnoses[@counter].IcdDiagnosisId" type="hidden" value="@diag.Icd10Record.Id"/>
+                    <input name="Diagnoses[@counter].Description" type="hidden" value="@diag.Diagnosis.Description" />
+                    <input name="Diagnoses[@counter].Type" type="hidden" value="@diag.Diagnosis.Type" />
+                    counter++;
+                }
+            }
+        </div>
+        <div id="diagnosesHolder"></div>
+        <div class="stand-alone">
+            <div class="left"><button id="addDiagnosis" class="button" style="padding-left:2em" value="" />+ Добавить диагноз</div>
+        </div>
+    </div>
+    <div class="content-container" style="clear:both">
+        <div class="stand-alone input-max">
+            <label asp-for=Treatment class="form-label blue"><h3>Рекомендации по лечению</h3></label>
+            <textarea asp-for=Treatment rows="3"></textarea>
+            <span asp-validation-for=Treatment class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="content-container" style="clear:both">
+        <div class="stand-alone input-max">
+            <label class="form-label blue"><h3>Заключение</h3></label>
+            <div class="stand-alone" style="display:flex;">
+                <div class="col-left margin-right">
+                    <label asp-for="Conclusion">Заключение</label>
+                    <select id="conclusion-select" asp-for="Conclusion">
+                        <option disabled selected>Выберите заключение</option>
+                        <option value="Recovery" selected>Выздоровление</option>
+                        <option value="Disease">Болезнь</option>
+                        <option value="Death">Смерть</option>
+                    </select>
+                    <span asp-validation-for=Conclusion class="text-danger"></span>
+                </div>
+                <div id="nextVisitDate" class="col-left @(Model.Conclusion=="Disease"?"":"hidden") margin-right">
+                    <label asp-for="NextVisitDate">Дата следующего визита</label>
+                    <input asp-for=NextVisitDate type="datetime-local" />
+                    <span asp-validation-for=NextVisitDate class="text-danger"></span>
+                </div>
+                <div id="deathDate" class="col-left @(Model.Conclusion=="Death"?"":"hidden")">
+                    <label asp-for="DeathDate">Дата смерти</label>
+                    <input asp-for="DeathDate" type="datetime-local" />
+                    <span asp-validation-for=DeathDate class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="stand-alone" style="display:flex;justify-content:center">
+        <input type="submit" class="button margin-right" value="Сохранить изменения" />
+        <botton class="button margin-left grey" onclick="closeModal()">Отмена</botton>
+    </div>
+</form>
+<script type="text/javascript">
+    var diagCount = @counter;
+</script>

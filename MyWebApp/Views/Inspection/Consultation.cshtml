@@ -1,0 +1,27 @@
+﻿@using MyWebApp.Models.ViewModels
+@model ConsultationItemCreateForViwModel
+@{
+    Layout = null;
+}
+<div class="stand-alone input-max">
+    <div class="stand-alone" style="display: flex;
+															    justify-content: space-between;
+															    align-items:center;
+															    flex-wrap:wrap">
+        <label class="switch" style="display:inline-block">
+            <input class="IsSecondary" type="checkbox" onchange="toggleConsult('SpecSelect_@Model.Position')"/>
+            <span class="slider round"></span>
+        </label>
+        <span class="form-label" style="padding-right:0.5em;display:inline-block;color:black;font-weight:bold">  Требуется консультация  </span>
+        <select id="SpecSelect_@Model.Position" name="Consultations[@Model.Position].SpecialityId" style="width:75%" disabled>
+            @foreach(var spec in Model.Specialities)
+            {
+                <option value="@spec.Id">@spec.Name</option>
+            }
+        </select>
+    </div>
+</div>
+<div class="stand-alone input-max">
+    <label class="form-label ">Комментарий</label>
+    <textarea name="Consultations[@Model.Position].Comment.Content" rows="3"></textarea>
+</div>

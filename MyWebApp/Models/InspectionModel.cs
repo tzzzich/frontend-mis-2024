@@ -23,7 +23,7 @@ namespace MyWebApp.Models
         [DataType(DataType.MultilineText)]
         public string Treatment { get; set; }
 
-        public Conclusion[] Conclusion { get; set; }
+        public string Conclusion { get; set; }
 
         [Display(Name = "Дата следующего визита")]
         public DateTime? NextVisitDate { get; set; }

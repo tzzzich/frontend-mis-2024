@@ -1,18 +1,19 @@
-﻿@model PatientForViewModel
+﻿@using MyWebApp.Models.ViewModels
+@model PatientAndInspectionsForViewModel
 @{
     ViewData["Title"] = $"Пациент {Model.Patient.Name}";
     var filter = Model.Filter;
-    ViewData["IsDead"] = Model.Inspections.IsDead;
+    ViewData["DoNotShowAddInspection"] = Model.Inspections.IsDead;
     string dead = Model.Inspections.IsDead ? "disabled" : "";
 }
 <!-- Фильтр -->
 <div class="content-header">
     <div class="stand-alone">
         <div class="left">
-            <h2>Медицинская карта пациента</h2>
+            <h1>Медицинская карта пациента</h1>
         </div>
         <div class="right">
-            <button class="btn btn-primary" onclick="inspectionCreateRederict('@Model.Patient.Id.ToString()', 'false')" id="btnAddInspection" @dead>Добавить осмотр</button>
+            <button class="button" onclick="inspectionCreateRederict('@Model.Patient.Id.ToString()', 'false')" id="btnAddInspection" @dead>Добавить осмотр</button>
         </div>
     </div>
     <div class="stand-alone">
@@ -20,12 +21,12 @@
             @{
                 var gender = Model.Patient.Gender == "Male" ? "mars" : "venus";
             }
-            <h4>
+            <h2>
                 @Model.Patient.Name
                 <img src="/images/@gender-icon.png" height="25" />
-            </h4>
+            </h2>
         </div>
-        <div class="right">
+        <div class="right" style="margin:24px auto">
             <span>Дата рождения: @Model.Patient.Birthday.GetValueOrDefault().ToString("dd.MM.yyy")
             </span>
         </div>
@@ -87,7 +88,7 @@
                 </select>
             </div>
             <div class="right">
-                <button id="searchBtn" class="btn btn-primary" style="width:15em;margin-top:1.5em">Поиск</button>
+                <button id="searchBtn" class="button" style="width:15em;margin-top:1.5em">Поиск</button>
             </div>
         </div>
     </form>
@@ -132,55 +133,8 @@
 }
 <!--Пагинация-->
 @{
-    filter.Page = null;
-    filter.Size = null;
-    string urlParams = MyWebApp.Utils.UriParamsParser.ParsFromeObjectFields(filter);
-    urlParams = urlParams != "" ? $"{urlParams}&" : "?";
-    string currPageSizeParam;
-    bool startDotsPlaced = false;
-    bool endDotsPlaced = false;
+    Html.RenderPartial("Pagination", new PaginationForViewModel { Filter = Model.Filter, PageInfo = Model.Inspections.Pagination });
 }
-<div class="stand-alone pagination-container">
-    <div>
-        @if (Model.Inspections.Pagination.Current > 1)
-        {
-            currPageSizeParam = $"{urlParams}page=1&size={Model.Inspections.Pagination.Size}";
-            <a class="pagination-item" href="@currPageSizeParam">&lt;</a>
-        }
-        @for (int pageN = 1; pageN <= Model.Inspections.Pagination.Count; pageN++)
-        {
-            currPageSizeParam = $"{urlParams}page={pageN}&size={Model.Inspections.Pagination.Size}";
-            if (pageN == Model.Inspections.Pagination.Current)
-            {
-                <a class="pagination-item-current" href="">@pageN</a>
-            }
-            else if (pageN < 3 || pageN + 1 >= Model.Inspections.Pagination.Count)
-            {
-                <a class="pagination-item" href="@currPageSizeParam">@pageN</a>
-            }
-            else if (pageN + 3 >= Model.Inspections.Pagination.Current && pageN - 3 <= Model.Inspections.Pagination.Current)
-            {
-                <a class="pagination-item" href="@currPageSizeParam">@pageN</a>
-            }
-            else if (pageN < Model.Inspections.Pagination.Current && !startDotsPlaced)
-            {
-                <span class="pagination-space"> ... </span>
-                startDotsPlaced = true;
-            }
-            else if (pageN > Model.Inspections.Pagination.Current && !endDotsPlaced)
-            {
-                <span class="pagination-space"> ... </span>
-                endDotsPlaced = true;
-            }
-
-        }
-        @if (Model.Inspections.Pagination.Current < Model.Inspections.Pagination.Count)
-        {
-            currPageSizeParam = $"{urlParams}page={Model.Inspections.Pagination.Count}&size={Model.Inspections.Pagination.Size}";
-            <a class="pagination-item" href="@currPageSizeParam">&gt;</a>
-        }
-    </div>
-</div>
 @section Scripts {
     <script src="~/js/patient.js" asp-append-version="true"></script>
     @{

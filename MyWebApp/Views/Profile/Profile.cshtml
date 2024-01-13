@@ -5,48 +5,46 @@
 }
 
 <main class="form-signin">
-    <div class="d-flex container justify-content-center">
-        <div class="card shadow" style="width: 50rem;">
-            <div class="card-body">
-                <h2 class="card-title">Профиль</h2>
-        <form class="form-container" data-ajax="true" data-ajax-method="post" data-ajax-success="onSaveSuccess" data-ajax-failure="onSaveFailed" data-ajax-url="/profile/save">
+    <div class="container justify-content-center">
+        <div class="card shadow">
+                <h2>Профиль</h2>
+        <form data-ajax="true" data-ajax-method="post" data-ajax-success="onSaveSuccess" data-ajax-failure="onSaveFailed" data-ajax-url="/profile/save">
             <div asp-validation-summary="ModelOnly" class="text-danger row"></div>
-                    <div id="errors" class="text-danger row d-none"></div>
-                    <div id="success" class="text-success row d-none"><span>Данные сохранены успешно</span></div>
-                    <div class="mb-3 stand-alone">
-                        <label asp-for="Name" class="form-label"></label>
-                <input asp-for="Name" class="form-control" />
+            <div id="errors" class="text-danger row hidden"></div>
+            <div id="success" class="text-success row hidden"><span>Данные сохранены успешно</span></div>
+            <div class="stand-alone flex">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control fill" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="stand-alone">
-                        <div class="mb-3 col-left">
-                            <label asp-for="Gender" class="form-label"></label>
-                            <select asp-for="Gender" class="form-control">
+                <div class="col-left">
+                    <label asp-for="Gender" class="form-label"></label>
+                    <select asp-for="Gender" class="form-control">
                         <option value="Male" selected>Мужской</option>
                         <option value="Female">Женский</option>
                     </select>
                 </div>
-                        <div class="mb-3 col-right" style="align-self:flex-end">
-                            <label asp-for="Birthday" class="form-label"></label>
-                    <input asp-for="Birthday" type="date" class="form-control" />
+                <div class="col-right" style="align-self:flex-end">
+                    <label asp-for="Birthday" class="form-label"></label>
+                    <input asp-for="Birthday" type="date" class="form-control" style="padding-bottom:7px"/>
                     <span asp-validation-for="Birthday" class="text-danger"></span>
                 </div>
             </div>
-                    <div class="mb-3 stand-alone">
-                        <label asp-for="Phone" class="form-label"></label>
-                <input asp-for="Phone" class="form-control phone-mask" />
+            <div class="stand-alone flex">
+                <label asp-for="Phone" class="form-label"></label>
+                <input asp-for="Phone" class="form-control phone-mask fill" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
-                    <div class="mb-3 stand-alone">
-                        <label asp-for="Email" class="form-label"></label>
-                        <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+            <div class="stand-alone flex">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control fill" placeholder="name@example.com" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-                    <div class="mb-3 stand-alone">
-                        <input id="submitBtn" type="submit" value="Сохранить изменения" class="btn btn-primary btn-block stand-alone" />
+            <div class="stand-alone">
+                <input id="submitBtn" type="submit" value="Сохранить изменения" class="button stand-alone" />
             </div>
         </form>
-            </div>
         </div>
     </div>
 </main>

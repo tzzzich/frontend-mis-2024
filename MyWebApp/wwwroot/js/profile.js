@@ -1,12 +1,12 @@
 ﻿function onSaveSuccess(xhr) {
-    $("#success").removeClass("d-none");
+    $("#success").removeClass("hidden");
     setTimeout(function () {
-        $("#success").addClass("d-none");
+        $("#success").addClass("hidden");
     }, 3000);
 }
 
 function oSaveFailed(xhr) {
     var message = xhr.responseJSON.message;
     $("#errors").html(message);
-    $("#errors").removeClass("d-none");
+    $("#errors").removeClass("hidden");
 }

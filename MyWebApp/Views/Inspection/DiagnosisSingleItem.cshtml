@@ -1,0 +1,9 @@
+﻿@model DiagnosisModel
+@{
+    Layout = null;
+    string type = Model.Type;
+    type = type == "Main" ? "Основной" : type == "Concomitant" ? "Сопутствующий" : "Осложнения";
+}
+<h3>(@Model.Code) @Model.Name</h3>
+<label class="form-label">Тип в осмотре: @type</label>
+<label class="form-label">Расшифровка: @Model.Description</label>

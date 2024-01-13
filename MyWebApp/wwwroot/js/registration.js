@@ -43,10 +43,10 @@ $(document).ready(function () {
 });
 
 function onRegistrationSuccess(xhr) {
-    $("#success").removeClass("d-none");
+    $("#success").removeClass("hidden");
     $(".form-container").prop("disable", true);
     setTimeout(function () {
-        $("#success").addClass("d-none");
+        $("#success").addClass("hidden");
         window.location.replace("/profile");
     }, 5000);
 }
@@ -54,5 +54,5 @@ function onRegistrationSuccess(xhr) {
 function onRegistrationFailed(xhr) {
     var message = xhr.responseJSON.message;
     $("#errors").html(message);
-    $("#errors").removeClass("d-none");
+    $("#errors").removeClass("hidden");
 }

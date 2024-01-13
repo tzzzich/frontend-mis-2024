@@ -35,6 +35,7 @@ function inspectionCreateRederict(patient, secondary, parent) {
     if (parent != null || parent !== undefined || parent != "undefined") {
         data.ParentId = parent;
     }
+    else data.ParentId = null;
     $.ajax({
         url: "/patient/storedata",
         data: data,
@@ -49,15 +50,15 @@ function expand(el, selector) {
     if ($(el).html() == "+") {
         $(el).html("-");
         $("." + selector).each(function () {
-            $(this).removeClass("hidden-block");
+            $(this).removeClass("hidden");
         });
     }
     else {
         $(el).html("+");
         $("." + selector).each(function () {
-            $(this).addClass("hidden-block");
+            $(this).addClass("hidden");
             $("." + $(this).data("id")).each(function(){
-                $(this).addClass("hidden-block");
+                $(this).addClass("hidden");
             });
             var expTmp = $(this).find(".inspection-expander");
             expTmp.html('+');

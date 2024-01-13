@@ -33,6 +33,10 @@ namespace MyWebApp.Utils
                             result += $"{property.Name}={propertyItem}&";
                         } 
                     }
+                    else if (property.GetType() == typeof(DateTime))
+                    {
+                        result += $"{property.Name}={((DateTime)property.Value).ToString("yyyy-MM-ddThh:mm:ss")}&";
+                    }
                     else
                     {
                         result += $"{property.Name}={property.Value}&";

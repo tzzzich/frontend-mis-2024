@@ -28,23 +28,23 @@ $(document).on("click", "#btnRegister", async function () {
     var modalcontent = await fetch("/home/getmodal");
     modalcontent = await modalcontent.text();
     $("#modalFormHolder").html(modalcontent);
-    $("#patientCreateModal").css("display", "block");
+    $("#patientCreateModal").removeClass("hidden");
     
 });
 
 $(document).on("click", ".close", function () {
-    $("#patientCreateModal").css("display", "none");
+    $("#patientCreateModal").addClass("hidden");
 });
 
 function onPatientCreateSuccess(xhr) {
-    $("#success").removeClass("d-none");
+    $("#success").removeClass("hidden");
     setTimeout(function () {
-        $("#success").addClass("d-none");
+        $("#success").addClass("hidden");
     }, 5000);
 }
 
 function onPatientCreateFailed(xhr) {
     var message = xhr.responseJSON.message;
     $("#errors").html(message);
-    $("#errors").removeClass("d-none");
+    $("#errors").removeClass("hidden");
 }

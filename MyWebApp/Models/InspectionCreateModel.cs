@@ -26,19 +26,19 @@ namespace MyWebApp.Models
         public string Treatment { get; set; }
 
         [Required(ErrorMessage = "Поле заключение не может быть пустым")]
-        public Conclusion Conclusion { get; set; }
+        public string Conclusion { get; set; }
 
         [DataType(DataType.DateTime)]
-        public DateTime NextVisitDate { get; set; }
+        public DateTime? NextVisitDate { get; set; }
 
         [DataType(DataType.DateTime)]
         [DateValidation(ErrorMessage = "Дата смерти не может быть позже текущего времени")]
-        public DateTime DeathDate { get; set; }
+        public DateTime? DeathDate { get; set; }
 
-        public string PreviousInspectionId { get; set; }
+        public string? PreviousInspectionId { get; set; }
 
-        public List<DiagnosisCreateModel> diagnoses { get; set; } = new List<DiagnosisCreateModel>();
+        public List<DiagnosisCreateModel> Diagnoses { get; set; } = new List<DiagnosisCreateModel>();
 
-        public List<ConsultationCreateModel> consultations { get; set; } = new List<ConsultationCreateModel>();
+        public List<ConsultationCreateModel> Consultations { get; set; } = new List<ConsultationCreateModel>();
     }
 }

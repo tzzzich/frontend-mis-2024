@@ -1,0 +1,123 @@
+﻿@using MyWebApp.Models.ViewModels
+@model PatientAndInspectionsForViewModel
+@{
+    var filter = Model.Filter;
+    ViewData["DoNotShowAddInspection"] = true;
+}
+<!-- Фильтр -->
+<div class="content-header">
+    <div class="stand-alone">
+        <div class="left">
+            <h1>Консультации</h1>
+        </div>
+    </div>
+</div>
+<div class="content-container" style="clear:both">
+    <form id="filterForm">
+        <div class="stand-alone">
+            <div class="col-left">
+                <label for="IcdRoots" class="form-label">МКБ-10</label>
+                <select id="IcdRoots" class="form-control" name="IcdRoots">
+                    <option value="placeholder">Выбрать</option>
+                    @foreach (var icd10Record in Model.Icd10RootsList)
+                    {
+                        string selected = "";
+                        if (filter != null && filter.IcdRoots != null) selected = filter.IcdRoots.Contains<string>(icd10Record.Id) ? "selected" : "";
+                        <!option value="@icd10Record.Id" @selected>(@icd10Record.Code) @icd10Record.Name</!option>
+                    }
+                </select>
+            </div>
+            <div class="col-right" style="padding-top:1.5em">
+                <fieldset>
+                    @{
+                        string grouped = "";
+                        string showAll = "";
+                        if (filter.Grouped.GetValueOrDefault()) grouped = "checked";
+                        else showAll = "checked";
+                    }
+                    <div class="left">
+                        <input type="radio" id="grouped" name="Grouped" value="true" @grouped />
+                        <label class="form-label" style="display:inline-block">Отсортировать по повторным</label>
+                    </div>
+                    <div class="right">
+                        <input type="radio" id="showAll" name="Grouped" value="false" @showAll />
+                        <label class="form-label" style="display:inline-block">Показать все</label>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="stand-alone">
+            <div class="left">
+                <label for="Size" class="form-label">Число осмотров на странице</label>
+                <select id="Size" class="form-control" name="Size">
+                    @{
+                        int[] size = new int[] { 4, 5, 10, 20, 50, 100 };
+                        foreach (int s in size)
+                        {
+                            if (s == Model.Inspections.Pagination.Size)
+                            {
+                                <option value="@s" selected>@s</option>
+                            }
+                            else
+                            {
+                                <option value="@s">@s</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="right">
+                <button id="searchBtn" class="button" style="width:15em;margin-top:1.5em">Поиск</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Список осмотров -->
+@{
+    int count = Model.Inspections.Inspections.Count;
+    int i = 0;
+    ViewData["Title"] = "Консультации";
+    ViewData["Grouping"] = filter.Grouped.GetValueOrDefault();
+}
+@if (Model != null)
+{
+    <div class="colums-container">
+        <div class="column-left">
+            @foreach (var inspection in Model.Inspections.Inspections)
+            {
+                if (i < count % 2 + count / 2)
+                {
+                    Html.RenderPartial("InspectionListItem", new RenderInspectionModel() { Inspection = inspection, Level = 0 });
+                }
+
+                i += 1;
+            }
+        </div>
+        @{
+            i = 0;
+        }
+        <div class="column-right">
+            @foreach (var insp in Model.Inspections.Inspections)
+            {
+
+                if (i >= count % 2 + count / 2)
+                {
+                    Html.RenderPartial("InspectionListItem", new RenderInspectionModel() { Inspection = insp, Level = 0 });
+                }
+
+                i += 1;
+            }
+        </div>
+
+    </div>
+}
+<!--Пагинация-->
+@{
+    Html.RenderPartial("Pagination", new PaginationForViewModel { Filter = Model.Filter, PageInfo = Model.Inspections.Pagination });
+}
+@section Scripts {
+    <script src="~/js/consultation.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyWebApp.Models;
+using MyWebApp.Models.ViewModels;
 using MyWebApp.Utils;
 using Newtonsoft.Json;
 using NuGet.Protocol;
@@ -11,10 +12,10 @@ namespace MyWebApp.Controllers
     {
         [HttpGet]
         [Route("patient/{id}")]
-        public async Task<IActionResult> GetPatient(string id, PatientInspectionsFilter filter)
+        public async Task<IActionResult> GetPatient(string id, InspectionsFilter filter)
         {
             var client = this.GetHttpClient();
-            var patient = new PatientForViewModel();
+            var patient = new PatientAndInspectionsForViewModel();
             patient.Filter = filter;
             var response = await client.GetAsync($"patient/{id}");
             if (response.StatusCode == HttpStatusCode.OK)

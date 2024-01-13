@@ -7,6 +7,7 @@ using NuGet.Protocol;
 using System.Diagnostics;
 using System.Net;
 using System.Text.Json;
+using MyWebApp.Models.ViewModels;
 
 namespace MyWebApp.Controllers
 {

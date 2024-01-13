@@ -41,7 +41,7 @@ namespace MyWebApp.Utils
             return controller.BadRequest(notValidResponse);
         }
 
-        public static async Task<IActionResult> GetErrorResult(this Controller controller, HttpResponseMessage response)
+        public static async Task<IActionResult> GetErrorResult(this Controller controller, HttpResponseMessage response, bool returnView = false)
         {
             try
             {
@@ -50,6 +50,11 @@ namespace MyWebApp.Utils
                     return controller.Redirect("/login");
                 }
                 var resp = await response.Content.ReadFromJsonAsync<ResponseModel>();
+                if (returnView)
+                {
+                    controller.Response.StatusCode = (int)response.StatusCode;
+                    return controller.View("DefaultError", resp.Message);
+                }
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.Forbidden:
@@ -62,17 +67,30 @@ namespace MyWebApp.Utils
                         return controller.Problem(detail: resp.Message, statusCode: (int)response.StatusCode);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var resp = await response.Content.ReadAsStringAsync();
-                dynamic jobject = JObject.Parse(resp);
-                dynamic errors = jobject["errors"];
-                var respModel = new ResponseModel();
-                respModel.Message = ErrorParser(errors);
-                respModel.Status = "400"; ;
-                return controller.BadRequest(respModel);
+                try
+                {
+                    dynamic jobject = JObject.Parse(resp);
+                    dynamic errors = jobject["errors"];
+                    var respModel = new ResponseModel();
+                    respModel.Message = ErrorParser(errors);
+                    respModel.Status = "400"; ;
+                    return controller.BadRequest(respModel);
+                }
+                catch (Exception e)
+                {
+                    if (returnView)
+                    {
+                        controller.Response.StatusCode = (int)response.StatusCode;
+                        return controller.View("DefaultError", $"{resp} {e.Message}");
+                    }
+                    return controller.Problem(detail: $"{resp}<br/>{e.Message}", statusCode: (int)response.StatusCode);
+
+                }
             }
-            
+
         }
 
         public static string ErrorParser(JToken obj)

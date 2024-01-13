@@ -1,4 +1,6 @@
-﻿namespace MyWebApp.Models
+﻿using MyWebApp.Models.ViewModels;
+
+namespace MyWebApp.Models
 {
     public class PatientForViewModel
     {

@@ -1,0 +1,32 @@
+﻿@model DiagnosisCreateModel
+@{
+    Layout = null;
+    IEnumerable<Icd10RecordModel> DiagnosisList = ViewBag.DiagnosisList;
+    int position = ViewBag.DiagPosition;
+}
+<input type="hidden" id="diag_@position" name="Diagnoses[@position].icdDiagnosisId" />
+<div class="stand-alone input-max flex">
+    <label class="form-label ">Болезни</label>
+    <select id="diagSelect_level0_@position" onchange="selectChanged(0, @position, this)">
+        <option disabled selected>Выберите диагноз</option>
+        @foreach(var diag in DiagnosisList)
+        {
+            <option value="@diag.Id">(@diag.Code) - @diag.Name</option>
+        }
+    </select>
+    <div id="innder_0_@position" class="input-max"></div>
+</div>
+<div class="stand-alone input-max">
+    <input type="text" name="Diagnoses[@position].Description" />
+</div>
+<div class="stand-alone">
+    <label class="form-label">Тип диагноза в осмотре</label>
+    <div style="display:flex">
+        <input type="radio" name="Diagnoses[@position].type" value="Main" style="margin-left:-9px"/>
+        <label class="form-label">Основной</label>
+        <input type="radio" name="Diagnoses[@position].type" value="Concomitant"/>
+        <label class="form-label">Сопутствующий</label>
+        <input type="radio" name="Diagnoses[@position].type" value="Complication" />
+        <label class="form-label">Осложнения</label>
+    </div>
+</div>

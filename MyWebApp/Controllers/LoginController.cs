@@ -69,7 +69,7 @@ namespace MyWebApp.Controllers
         public async Task<IActionResult> Logout()
         {
             var client = this.GetHttpClient();
-            HttpResponseMessage response = await client.PostAsync("doctor/login", null);
+            HttpResponseMessage response = await client.PostAsync("doctor/logout", null);
             HttpContext.Session.SetString("accessToken", "");
             if (response.StatusCode == HttpStatusCode.OK)
             {

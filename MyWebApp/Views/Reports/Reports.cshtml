@@ -1,0 +1,112 @@
+﻿@model IcdRootsReportModel
+@{
+    IcdRootsReportFiltersModel filter = ViewBag.Filter;
+    if (filter == null)
+    {
+        filter = new IcdRootsReportFiltersModel
+                {
+                    Start = DateTime.Now.AddDays(-1),
+                    End = DateTime.Now,
+                    IcdRoots = new List<string>(),
+                };
+    }
+    var errors = ViewBag.Errors;
+    List<Icd10RecordModel> roots = ViewBag.Roots;
+}
+<form>
+    <div id="reportFilter" class="content-container flex" style="box-shadow:3px 3px 2px gray">
+        <h3>Статистика осмотров</h3>
+        <div class="flex-row space-between" style="margin:2em 0">
+            <div class="flex input-max" style="flex-basis:5em">
+                <label for="start" class="form-label">Дата с</label>
+                <input id="start" type="date" name="start" value="@filter.Start.GetValueOrDefault().ToString("yyyy-MM-dd")"/>
+            </div>
+            <div class="flex input-max" style="flex-basis:5em">
+                <label for="end" class="form-label">Дата по</label>
+                <input id="end" type="date" name="end" value="@filter.End.GetValueOrDefault().ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="flex" style="flex-basis:53em">
+                <label for="icdroots" class="form-label">МКБ-10</label>
+                <div id="selectedRootsHolder" onclick="showRootsList()">
+                    @foreach(var root in roots){
+                        <div id="innerRootItem_@root.Id" class="root-item @(Model.Filters.IcdRoots.Contains(root.Code)?"":"hidden")">
+                            <span style="margin-right:3px">@root.Code</span>
+                            <span onclick="removeRootItem('@root.Id')" style="cursor:pointer">x</span>
+                        </div>
+                    }
+                </div>
+                <div id="rootsHolder" class="hidden">
+                    @foreach (var root in roots)
+                    {
+                        <div id="outerRootItem_@root.Id" class="root-item @(Model.Filters.IcdRoots.Contains(root.Code)?"hidden":"")" style="cursor:pointer" ondblclick="addRootItem('@root.Id')">
+                            <span>@root.Code</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <input class="button" style="max-width:20em" type="submit"/>
+    </div>
+    @foreach (var root in roots)
+    {
+        <input id="rootid_@root.Id" type="hidden" value="@root.Id" name="IcdRoots" @(Model.Filters.IcdRoots.Contains(root.Code) ? "" : "disabled") />
+    }
+</form>
+<div class="content-container" style="box-shadow:3px 3px 2px gray">
+    @if (Model != null)
+    {
+<table>
+        <tr class="row-header">
+            <td class="cell">Пациент/Коды</td>
+            @foreach(var code in Model.Filters.IcdRoots)
+            {
+                <td class="cell">@code</td>
+            }
+        </tr>
+        @{
+            bool isEven = true;
+        }
+        @foreach(var record in Model.Records)
+        {
+            <tr class="row-@(isEven?"even":"odd")">
+                @{
+                    isEven = !isEven;
+                }
+            <td class="cell">
+                <h4 class="">@record.PatientName (@record.PatientBirthdate.GetValueOrDefault().ToString("d"))</h4>
+                <span>@(record.Gender=="Male"?"Мужчина":"Женщина")</span>
+            </td>
+            @foreach (var code in Model.Filters.IcdRoots)
+            {
+                @if (record.VisitsByRoot.ContainsKey(code))
+                {
+                    <td class="cell">@record.VisitsByRoot[code]</td>
+                }
+                else
+                {
+                    <td class="cell"> </td>
+                }
+            }
+                    </tr>
+        }
+        <tr class="row-header">
+            <td class="cell">Итого</td>
+            @foreach(var item in Model.Filters.IcdRoots)
+            {
+                <td class="cell">@Model.SummaryByRoot[item]</td>
+            }
+        </tr>
+        </table>
+    }
+    else
+    {
+        <div class="text-danger">@errors.Value.Detail</div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/reports.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -11,6 +11,6 @@ namespace MyWebApp.Models
         public string Description { get; set; }
 
         [Required]
-        public DiagnosisType Type { get; set; }
+        public string Type { get; set; }
     }
 }

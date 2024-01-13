@@ -1,0 +1,140 @@
+﻿@model InspectionModel
+@{
+    ViewData["Title"] = $"Осмотр пациента {Model.Patient.Name} от {Model.Date.ToString("dd.MM.yy")}";
+}
+<div class="content-container" style="clear:both">
+    <div class="flex-row space-between" style="align-items:center">
+        <div class="left">
+            <h1 class="blue">Амбулаторный осмотр от @Model.Date.ToString("dd.MM.yyyy - hh:mm")</h1>
+        </div>
+        @if (Model.Doctor.Id == (string?)ViewData["CurrUserId"]){
+            <div class="right">
+                <button id="btnInspectionEdit" class="button">Редактировать осмотр</button>    
+            </div>
+        }
+    </div>
+    <div class="stand-alone flex">
+        <h4 class="no-margin-vertical">@($"Пациент {Model.Patient.Name}")</h4>
+        <span>Пол: @(Model.Patient.Gender=="Male"?"мужской":"женский")</span>
+        <span>Дата рождения: @Model.Patient.Birthday.GetValueOrDefault().ToString("dd.MM.yyyy")</span>
+        <br/>
+        <span class="text-grey">Медицинский работник: @Model.Doctor.Name</span>
+    </div>
+</div>
+<div class="content-container" style="clear:both">
+    <div class="stand-alone flex">
+            <label class="form-label blue"><h3>Жалобы</h3></label>
+            <pre>@Model.Complaints</pre>
+    </div>
+</div>
+<div class="content-container" style="clear:both">
+    <div class="stand-alone flex">
+        <label class="form-label blue"><h3>Анамнез заболевания</h3></label>
+        <pre>@Model.Anamnesis</pre>
+    </div>
+</div>
+@if (Model.Consultations.Length > 0)
+{
+    <div class="content-container flex" style="clear:both">
+        @foreach (var consult in Model.Consultations)
+        {
+            <div style="margin-bottom:10px">
+                <label class="form-label blue"><h3>Консультация</h3></label>
+                <label class="form-label">Специализация консультанта: @consult.Speciality.Name</label>
+                @if (consult.RootComment != null)
+                {
+                    <h4 class="no-margin-vertical">Комментарии</h4>
+                    <div style="margin-left:20px">
+                        <h4 class="no-margin-vertical">@consult.RootComment.Author.Name</h4>
+                        <div class ="flex" style="padding-left:10px">
+                            <div class="flex-row space-between">
+                                <span id="comment_span_@consult.RootComment.Id" class="left fill">@consult.RootComment.Content</span>
+                                @if (consult.RootComment.Author.Id == (string?)ViewData["CurrUserId"])
+                                {
+                                    <input id="comment_input_@consult.RootComment.Id" type="text" class="fill hidden" style="margin-right:10px" value="@consult.RootComment.Content" onfocusout="closeEdit('@consult.RootComment.Id')" />
+                                    <button id="comment_button_@consult.RootComment.Id" class="button orange" onclick="editComment('@consult.RootComment.Id', '@consult.Id', this)">Редактировать комментарий</button>
+                                }
+                            </div>
+                            <div style="display:flex;align-items:flex-start">
+                                @if (consult.RootComment.ModifyTime != null && consult.RootComment.ModifyTime.GetValueOrDefault() != consult.RootComment.CreateTime)
+                                {
+                                    <span class="text-grey"> (изменен: @consult.RootComment.ModifyTime.GetValueOrDefault().ToString("dd.MM.yyyy hh:mm"))</span>
+                                }
+                                else
+                                {
+                                    <span class="text-grey">@consult.RootComment.CreateTime.ToString("dd.MM.yyyy hh:mm")</span>
+                                }
+                                @if (consult.CommentsNumber > 1)
+                                {
+                                    <span class="blue-only-color" style="font-size:small;margin-left:10px;cursor:pointer" onclick="expandComents('@consult.Id', '@(consult.CommentsNumber-1)', this)"> Показать ответы(@(consult.CommentsNumber - 1))</span>
+                                }
+                                <a class="blue-only-color" style="text-decoration:none; font-size:small;margin-left:10px;cursor:pointer" onclick="addComment('@consult.RootComment.Id')"> Ответить</a>
+                            </div>
+                            <div id="commentReplyHolder_@consult.RootComment.Id" class="flex-row space-between hidden">
+                                <input id="newCommentText_@consult.RootComment.Id" type="text" placeholder="Оставить комментарий" style="width:100%;margin-right:10px"/>
+                                <button class="button" onclick="addCommentSave('@consult.RootComment.Id', '@consult.Id')">Оставить комментарий</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="max-width:400px;border-block-end:1px solid lightgrey"></div>
+                    <div id="commentsHolder_@consult.Id" class="hidden" style="margin-left:20px"></div>
+                }
+            </div>
+        }
+    </div>
+}
+<div class="content-container" style="clear:both">
+    <div class="stand-alone input-max">
+        <label class="form-label blue"><h3>Диагнозы</h3></label>
+        @foreach(var diag in Model.Diagnoses){
+            Html.RenderPartial("DiagnosisSingleItem", diag);
+        }
+    </div>
+</div>
+<div class="content-container" style="clear:both">
+    <div class="stand-alone input-max">
+        <label class="form-label blue"><h3>Рекомендации по лечению</h3></label>
+        <pre>@Model.Treatment</pre>
+    </div>
+</div>
+
+<div class="content-container" style="clear:both">
+    <div class="stand-alone input-max">
+        <label class="form-label blue"><h3>Заключение</h3></label>
+        <div class="stand-alone" style="display:flex;">
+            <div class="col-left margin-right">
+                @{
+                    string concl = Model.Conclusion;
+                    concl = concl == "Recovery" ? "Выздоровление" : concl == "Disease" ? "Болезнь" : "Смерть";
+                }
+                <label class="form-label">@concl</label>
+                @if (Model.NextVisitDate != null)
+                {
+                    <span>Дата следующего визита: @Model.NextVisitDate.GetValueOrDefault().ToString("dd.MM.yyyy hh:mm")</span>
+                }
+                @if (Model.DeathDate != null)
+                {
+                    <span>Дата смерти: @Model.DeathDate.GetValueOrDefault().ToString("dd.MM.yyyy hh:mm")</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div id="inspectionModal" class="modal hidden">
+    <div class="modal-content" style="width:800px">
+        <div class="content-container shadow" style="background-color:#fff">
+            <div id="modalFormHolder">
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/inspectionDetail.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        const patientId = '@Model.Patient.Id';
+        const inspectionId = '@Model.Id.ToString()';
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

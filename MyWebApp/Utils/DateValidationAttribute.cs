@@ -6,6 +6,7 @@ namespace MyWebApp.Utils
     {
         public override bool IsValid(object value)
         {
+            if (value == null) return true;
             if (value is DateTime birthDate)
             {
                 var today = DateTime.Today;

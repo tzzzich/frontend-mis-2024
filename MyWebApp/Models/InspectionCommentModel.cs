@@ -23,6 +23,6 @@ namespace MyWebApp.Models
         public DoctorModel Author { get; set; }
 
         [JsonProperty("modifyTime")]
-        public DateTime ModifyTime { get; set; }
+        public DateTime? ModifyTime { get; set; }
     }
 }

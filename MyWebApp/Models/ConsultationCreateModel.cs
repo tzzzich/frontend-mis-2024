@@ -8,6 +8,6 @@ namespace MyWebApp.Models
         public string SpecialityId { get; set; }
 
         [Required]
-        public InspectionCommentCreateModel Comment { get; set; }
+        public InspectionCommentCreateModel Comment { get; set; } = new InspectionCommentCreateModel();
     }
 }

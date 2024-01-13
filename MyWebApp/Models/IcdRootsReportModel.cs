@@ -9,6 +9,6 @@ namespace MyWebApp.Models
 
         public List<IcdRootsReportRecordModel> Records { get; set; }
 
-        public Dictionary<string, List<int>> SummaryByRoot { get; set; }
+        public Dictionary<string, int> SummaryByRoot { get; set; }
     }
 }

@@ -6,5 +6,5 @@
 function onLoginFailed(xhr) {
     var message = xhr.responseJSON.message;
     $("#errors").html(message);
-    $("#errors").removeClass("d-none");
+    $("#errors").removeClass("hidden");
 }
