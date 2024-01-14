@@ -5,7 +5,7 @@ namespace MyWebApp.Models
 {
     public class InspectionCreateModel
     {
-        [Required]
+        [Required(ErrorMessage = "Поле дата не может быть пустым")]
         [DataType(DataType.DateTime)]
         [DateValidation(ErrorMessage = "Дата не может быть позже текущего времени")]
         public DateTime Date { get; set; }
@@ -37,6 +37,7 @@ namespace MyWebApp.Models
 
         public string? PreviousInspectionId { get; set; }
 
+        [MinLength(1, ErrorMessage = "Должен быть как минимум один диагноз")]
         public List<DiagnosisCreateModel> Diagnoses { get; set; } = new List<DiagnosisCreateModel>();
 
         public List<ConsultationCreateModel> Consultations { get; set; } = new List<ConsultationCreateModel>();

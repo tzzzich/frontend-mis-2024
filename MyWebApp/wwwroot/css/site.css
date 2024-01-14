@@ -2,15 +2,17 @@ html {
   font-size: 14px;
   box-sizing: border-box;
 }
-media (min-width: 768px) {
-  font-size: 16px;
-}
 html {
   position: relative;
   min-height: 100%;
 }
 body {
   font-family: Arial, sans-serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
 }
 main {
   padding-bottom: 80px;
@@ -82,6 +84,82 @@ input[type=radio]:focus {
 fieldset {
   border: none;
   display: flex;
+  width: 97%;
+  justify-content: space-around;
+}
+.main-container {
+  min-width: 70vw;
+}
+@media (max-width: 564px) {
+  .cell {
+    writing-mode: vertical-lr;
+  }
+}
+@media (max-width: 334px) {
+  .very-small-screen-block {
+    display: block!important;
+  }
+}
+@media (max-width: 768px) {
+  .col-left,
+  .col-right,
+  .left,
+  .right {
+    width: unset!important;
+    float: none!important;
+  }
+  .main-container {
+    min-width: 97vw;
+  }
+  .small-screen-block {
+    display: block !important;
+  }
+  .cell {
+    font-size: smaller!important;
+  }
+  .menu {
+    display: none!important;
+  }
+  .hamburger {
+    display: flex!important;
+  }
+  .mobile-menu {
+    display: none;
+    padding: 0!important;
+    max-height: 0!important;
+    overflow: hidden!important;
+    transition: max-height 0.3s ease !important;
+  }
+  .active-for-mobil {
+    display: block !important;
+    max-height: 500px!important;
+  }
+  html {
+    font-size: 12px!important;
+  }
+  fieldset {
+    justify-content: space-between;
+  }
+  .navbar-expand-sm .navbar-collapse {
+    display: none !important;
+  }
+  .navbar-expand-sm .navbar-toggler {
+    display: initial!important;
+  }
+  #rootsHolder {
+    top: 370px!important;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .colums-container {
+    flex-direction: column!important;
+  }
+  .column-left,
+  .column-right {
+    width: 100%!important;
+    margin: 0!important;
+    padding: 0!important;
+  }
 }
 .button {
   padding: 0 10px;
@@ -159,7 +237,7 @@ header {
   max-height: 500px;
 }
 .active {
-  display: block!important;
+  display: block !important;
 }
 .active-for-mobil {
   display: block;
@@ -206,25 +284,6 @@ header {
   text-decoration: none;
   font-size: 16px;
 }
-@media (max-width: 768px) {
-  .menu {
-    display: none;
-  }
-  .hamburger {
-    display: flex;
-  }
-  .mobile-menu {
-    display: none;
-    padding: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-  }
-  .active-for-mobil {
-    display: block !important;
-    max-height: 500px;
-  }
-}
 .flex {
   display: flex;
   flex-direction: column;
@@ -233,7 +292,7 @@ header {
   width: 100%;
 }
 .hidden {
-  display: none!important;
+  display: none !important;
 }
 .card {
   max-width: 500px;
@@ -326,11 +385,6 @@ header {
   padding-left: 2px;
   display: inline-block;
   float: right;
-}
-.colums-container {
-  /*display: flex;
-flex-direction: row;*/
-  display: block;
 }
 .content-container {
   box-shadow: #808080 10px 10px initial;
@@ -534,6 +588,9 @@ input:checked + .slider-twosided:before {
 .container {
   max-width: 1100px;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-basis: 84vh;
 }
 .form-container {
   max-width: 800px;
@@ -543,13 +600,17 @@ input:checked + .slider-twosided:before {
   border-radius: 0.3em;
   overflow: hidden;
 }
+.central-form {
+  min-width: 25vw;
+  align-self: center;
+}
 .login-form {
   max-width: 500px;
   margin: auto;
 }
 h1 {
   color: #333333;
-  font-size: 2em!important;
+  font-size: 2em !important;
 }
 p {
   color: #666666;
@@ -580,7 +641,7 @@ p {
   font-weight: bold;
 }
 .text-success {
-  color: red;
+  color: lightgreen;
   font-weight: bold;
 }
 .col-left {
@@ -602,32 +663,13 @@ p {
   width: 98%;
 }
 .form-label {
-  margin: 0;
+  margin: 5px 0;
   color: #808080;
   font-size: small;
 }
 .header-palette {
-  color: white!important;
+  color: white !important;
   background-color: rgb(4 19 95);
-}
-@media screen and (max-width: 600px) {
-  .col-left,
-  .col-right,
-  .left,
-  .right {
-    width: 100%;
-    float: none;
-  }
-}
-@media (max-width: 600px) {
-  .navbar-expand-sm .navbar-collapse {
-    display: none !important;
-  }
-}
-@media (max-width: 600px) {
-  .navbar-expand-sm .navbar-toggler {
-    display: initial;
-  }
 }
 .searchItem {
   color: #1e7ad3;
@@ -657,6 +699,7 @@ p {
 .search .spec-results {
   display: none;
   position: absolute;
+  top: 70px;
   left: 0;
   right: 0;
   z-index: 10;
@@ -712,7 +755,7 @@ p {
 .colums-container {
   display: flex;
   flex-direction: row;
-  display: block;
+  justify-content: space-between;
 }
 .content-container {
   box-shadow: #808080 10px 10px initial;
@@ -907,15 +950,6 @@ input:focus + .slider-twosided {
   color: darkgray;
   border-color: gray;
 }
-@media screen and (max-width: 600px) {
-  .colums-container {
-    flex-direction: column;
-  }
-  .column-left,
-  .column-right {
-    width: 100%;
-  }
-}
 .icon {
   fill: deepskyblue;
   height: 20px;
@@ -972,9 +1006,45 @@ input:focus + .slider-twosided {
 .orange:hover {
   background-color: #ebad05;
 }
+.pre {
+  white-space: pre-wrap;
+}
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: lightgray;
+  color: darkgray;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: lightgray transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
 .cell {
   border: 1px solid #539dee;
   text-align: center;
+  word-break: break-all;
 }
 .row-even {
   background-color: honeydew;
@@ -984,11 +1054,6 @@ input:focus + .slider-twosided {
 }
 .row-header {
   background-color: aquamarine;
-}
-@media (max-width: 768px) {
-  .cell {
-    font-size: smaller;
-  }
 }
 .root-item {
   border: none;
@@ -1015,13 +1080,27 @@ input:focus + .slider-twosided {
 #rootsHolder {
   display: flex;
   flex-wrap: wrap;
-  position: fixed;
+  position: absolute;
   z-index: 1;
-  top: 260px;
-  width: 50em;
+  top: 265px;
+  max-width: 50em;
   background-color: white;
   justify-content: space-between;
   border: 1px solid black;
   border-radius: 0.5em;
   box-shadow: 3px 3px 3px darkgray;
+}
+.selectedRoot {
+  background-color: blue;
+}
+.comment-text {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  overflow: hidden;
+  padding-right: 10px;
+}
+@media (min-width: 767px) {
+  .mobile-menu {
+    display: none !important;
+  }
 }

@@ -6,7 +6,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MyWebApp</title>
-<!--<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />-->
     <link rel="stylesheet" href="~/css/Site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MyWebApp.styles.css" asp-append-version="true" />
 </head>
@@ -56,18 +55,15 @@
                     </ul>
                 </div>
                     <ul class="mobile-menu stand-alone">
-                        <li>
-                            <a href="/">Пациенты</a>
-                        </li>
-                        <li>
-                            <a href="/consultation/">Консультация</a>
-                        </li>
-                        <li>
-                            <a href="/reports/">Отчеты</a>
-                        </li>
-                        <li>
-                            <a href="/statistics/">Статистика</a>
-                        </li>
+                    <li>
+                        <a href="/">Пациенты</a>
+                    </li>
+                    <li>
+                        <a href="/consultations/">Консультации</a>
+                    </li>
+                    <li>
+                        <a href="/reports/">Отчеты и статистика</a>
+                    </li>
                         <li><a href="/profile/">Профиль</a></li>
                         <li><a href="#" id="logoutBtn">Выход</a></li>
                     </ul>
@@ -84,7 +80,7 @@
         </nav>
     </header>
     <div class="container" id="content">
-        <main role="main">
+        <main role="main" class="flex main-container">
             @RenderBody()
         </main>
     </div>
@@ -95,7 +91,6 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <!--<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>-->
     <script src="~/lib/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/lib/jquery.maskedinput/jquery.maskedinput.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

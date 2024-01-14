@@ -12,7 +12,7 @@ namespace MyWebApp.Models
         [HiddenInput]
         public string createTime { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Поле имя должно быть заполнено")]
         [Display(Name = "ФИО")]
         public string fullName { get; set; }
 
@@ -21,8 +21,8 @@ namespace MyWebApp.Models
         public string phoneNumber { get; set; }
 
         [Display(Name = "Адрес электронной почты")]
-        [Required]
-        [EmailAddress(ErrorMessage = "Некорректный адрес")]
+        [Required(ErrorMessage = "Некорректный адрес")]
+        [EmailAddress(ErrorMessage = "Поле Email должно быть заполнено")]
         public string email { get; set; }
 
         [Required]

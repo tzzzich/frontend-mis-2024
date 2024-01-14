@@ -56,21 +56,21 @@
                         if (filter.Grouped.GetValueOrDefault()) grouped = "checked";
                         else showAll = "checked";
                     }
-                    <div class="left">
+                    <div class="">
                         <input type="radio" id="grouped" name="Grouped" value="true" @grouped/>
                         <label class="form-label" style="display:inline-block">Отсортировать по повторным</label>
                     </div>
-                    <div class="right">
+                    <div class="">
                         <input type="radio" id="showAll" name="Grouped" value="false" @showAll/>
                         <label class="form-label" style="display:inline-block">Показать все</label>
                     </div>
                 </fieldset>
             </div>
         </div>
-        <div class="stand-alone">
+        <div class="stand-alone" style="display: flex;justify-content: space-between;align-items: flex-end;">
             <div class="left">
                 <label for="Size" class="form-label">Число осмотров на странице</label>
-                <select id="Size" class="form-control" name="Size">
+                <select id="Size" class="form-control" name="Size" style="width:100%">
                     @{
                         int[] size = new int[] { 4, 5, 10, 20, 50, 100 };
                         foreach(int s in size)

@@ -7,5 +7,7 @@
         public string ConsultId { get; set; }
 
         public string UserId { get; set; }
+
+        public string SpecName { get; set; }
     }
 }

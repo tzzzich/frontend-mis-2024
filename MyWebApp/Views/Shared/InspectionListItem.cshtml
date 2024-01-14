@@ -20,16 +20,16 @@
 
 
     <!div class="content-container inspection-box @boxclass @hidden @prevId @outlined" data-id="@inspection.Id.ToString()" style="margin-left:@margin">
-        <div class="stand-alone">
+        <div class="flex-row space-between very-small-screen-block">
             @if (grouping.GetValueOrDefault() && (Model.Level<2) && (inspection.HasChain || inspection.HasNested))
             {
                 <span class="inspection-expander" onclick="expand(this, '@inspection.Id')">+</span>
             }
-            <div style="float:left">
+            <div style="">
                 <span style="background-color:darkgray;color:white">@inspDate</span>
                 <span> Амбулаторный осмотр</span>
             </div>
-            <div style="float:right">
+            <div style="">
             @if (inspection.Conclusion != "Death" && !inspection.HasNested && !doNotShowAddInspection.GetValueOrDefault())
             {
                 <div style="display:inline-block">

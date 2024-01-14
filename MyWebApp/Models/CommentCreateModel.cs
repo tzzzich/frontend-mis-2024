@@ -5,7 +5,7 @@ namespace MyWebApp.Models
     public class CommentCreateModel
     {
         
-        [Required]
+        [Required(ErrorMessage = "Комментарий не может быть пустым")]
         [StringLength(1000, MinimumLength = 1)]
         public string Content { get; set; }
 

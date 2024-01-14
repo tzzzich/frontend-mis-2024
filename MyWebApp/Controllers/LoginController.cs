@@ -22,8 +22,6 @@ namespace MyWebApp.Controllers
 		[Route("/login/login")]
 		public async Task<IActionResult> DoLogin (LoginCredentialsModel model)
 		{
-			if (ModelState.IsValid)
-			{
                 var client = this.GetHttpClient();
                 HttpResponseMessage response = await client.PostAsJsonAsync("doctor/login", model);
 				if(response.StatusCode== HttpStatusCode.OK)
@@ -60,8 +58,6 @@ namespace MyWebApp.Controllers
                     return await this.GetErrorResult(response);
 
                 }
-            }
-            return await this.GetValidationErrorResult(ModelState);
         }
 
 

@@ -35,11 +35,11 @@
                         if (filter.Grouped.GetValueOrDefault()) grouped = "checked";
                         else showAll = "checked";
                     }
-                    <div class="left">
+                    <div class="">
                         <input type="radio" id="grouped" name="Grouped" value="true" @grouped />
                         <label class="form-label" style="display:inline-block">Отсортировать по повторным</label>
                     </div>
-                    <div class="right">
+                    <div class="">
                         <input type="radio" id="showAll" name="Grouped" value="false" @showAll />
                         <label class="form-label" style="display:inline-block">Показать все</label>
                     </div>

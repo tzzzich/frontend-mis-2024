@@ -5,10 +5,12 @@ using MyWebApp.Models.ViewModels;
 using MyWebApp.Utils;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.Net;
 using System.Reflection;
 using System.Web.Helpers;
+using System.Web.Mvc;
 
 namespace MyWebApp.Controllers
 {
@@ -44,7 +46,7 @@ namespace MyWebApp.Controllers
 
         [HttpGet]
         [Route("/inspection/getcomments/{consultId}")]
-        public async Task<IActionResult> GetComments(string consultId)
+        public async Task<IActionResult> GetComments(string consultId, [FromQuery] string SpecName = "")
         {
             var client = this.GetHttpClient();
             var response = await client.GetAsync($"consultation/{consultId}");
@@ -62,7 +64,7 @@ namespace MyWebApp.Controllers
                     });
                 }
                 ProcessComments(model, consultation.Comments);
-                return View("CommentsListView", new CommentsListForViewModel { Comments = model, ConsultId = consultId, UserId = HttpContext.Session.GetString("id") });
+                return View("CommentsListView", new CommentsListForViewModel { Comments = model, ConsultId = consultId, UserId = HttpContext.Session.GetString("id"), SpecName = SpecName });
             }
             else
             {
@@ -171,34 +173,77 @@ namespace MyWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(InspectionCreateModel model)
         {
-            if (ModelState.IsValid)
+            int i = 0;
+            string errors = "";
+            foreach (var diag in model.Diagnoses)
             {
-                InspectionTransferModel transferData;
-                if (HttpContext.Session.Keys.Contains<string>("inspectionTransfer"))
+                if (diag.Description == null || diag.Description.Trim() == "")
                 {
-                    string transferSring = HttpContext.Session.GetString("inspectionTransfer");
-                    transferData = JsonConvert.DeserializeObject<InspectionTransferModel>(transferSring);
+                    errors += $"{(errors == "" ? "" : "#")}DiagnosisError{i}|Поле описание не должно быть пустым";
                 }
-                else
+                if (diag.Type == null || diag.Type == "")
                 {
-                    throw new ArgumentNullException("InspectionTransferModel is absent in current session context");
+                    errors += $"{(errors == "" ? "" : "#")}DiagnosisError{i}|Выбирите тип диагноза";
                 }
-                var client = this.GetHttpClient();
-                var response = await client.PostAsJsonAsync($"patient/{transferData.PatientId}/inspections", model);
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return await this.GetErrorResult(response);
-                }
+                i++;
+            }
+            InspectionTransferModel transferData;
+            if (HttpContext.Session.Keys.Contains<string>("inspectionTransfer"))
+            {
+                string transferSring = HttpContext.Session.GetString("inspectionTransfer");
+                transferData = JsonConvert.DeserializeObject<InspectionTransferModel>(transferSring);
             }
             else
             {
-                return await this.GetValidationErrorResult(ModelState);
+                throw new ArgumentNullException("InspectionTransferModel is absent in current session context");
             }
+            var mainDiagnosesCount = model.Diagnoses.Where(d => d.Type == "Main").ToList().Count;
+            if (mainDiagnosesCount == 0)
+            {
+                errors += $"{(errors == "" ? "" : "#")}DiagnosisErrorОбязательно должен присутстовать основной диагноз";
+            }
+            if (mainDiagnosesCount > 1)
+            {
+                errors += $"{(errors == "" ? "" : "#")}DiagnosisErrorОсновной диагноз может быть только один";
+            }
+            if (model.Conclusion == "Recovery")
+            {
+                model.DeathDate = null;
+                model.NextVisitDate = null;
+            }
+            if (model.Conclusion == "Disease")
+            {
+                if (model.NextVisitDate == null || model.NextVisitDate == DateTime.MinValue)
+                {
+                    errors += $"{(errors == "" ? "" : "#")}ConclusionErrorПри выборе заключения болезнь дата следующего визита должна быть заполнена";
+                }
+                if (model.Date > model.NextVisitDate)
+                {
+                    errors += $"{(errors == "" ? "" : "#")}ConclusionErrorДата следующего визита должна быть позднее даты текущего осмотра";
+                }
+                model.DeathDate = null;
+            }
+            if (model.Conclusion == "Death")
+            {
+                if (model.DeathDate == null || model.DeathDate == DateTime.MinValue)
+                {
+                    errors += $"{(errors == "" ? "" : "#")}ConclusionErrorДатаПри выборе заключения смерть дата смерти должна быть заполнена";
+                }
+                model.NextVisitDate = null;
+            }
+            if (errors != "") return BadRequest(new ResponseModel { Message = errors });
+            if (!ModelState.IsValid) return await this.GetValidationErrorResult(ModelState);
 
+            var client = this.GetHttpClient();
+            var response = await client.PostAsJsonAsync($"patient/{transferData.PatientId}/inspections", model);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return Ok();
+            }
+            else
+            {
+                return await this.GetErrorResult(response);
+            }
         }
 
         [HttpGet]
@@ -414,27 +459,82 @@ namespace MyWebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(string id, InspectionEditModel model)
         {
-            if (ModelState.IsValid)
+            int i = 0;
+            string errors = "";
+            foreach (var diag in model.Diagnoses)
             {
-                var client = this.GetHttpClient();
-                var response = await client.PutAsJsonAsync($"inspection/{id}", model);
-                if (response.StatusCode == HttpStatusCode.OK)
+                if (diag.Description == null || diag.Description.Trim() == "")
                 {
-                    return Ok();
+                    errors += $"{(errors == "" ? "" : "#")}DiagnosisError{i}|Поле описание не должно быть пустым";
                 }
-                else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                if (diag.Type == null || diag.Type == "")
                 {
-                    return Redirect("/login");
+                    errors += $"{(errors == "" ? "" : "#")}DiagnosisError{i}|Выбирите тип диагноза";
                 }
-                else
-                {
-                    return await this.GetErrorResult(response);
-                }
+                i++;
+            }
+
+            int mainDiagnosesCount = model.Diagnoses.Where(d => d.Type == "Main").Count();
+            if (mainDiagnosesCount == 0)
+            {
+                errors += $"{(errors == "" ? "" : "#")}DiagnosisErrorОбязательно должен присутстовать основной диагноз";
+            }
+            if (mainDiagnosesCount > 1)
+            {
+                errors += $"{(errors == "" ? "" : "#")}DiagnosisErrorОсновной диагноз может быть только один";
+            }
+            if (model.Conclusion == "Recovery")
+            {
+                model.DeathDate = null;
+                model.NextVisitDate = null;
+            }
+            var client = this.GetHttpClient();
+            var response = await client.GetAsync($"inspection/{id}");
+            InspectionModel insp;
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                insp = await response.Content.ReadFromJsonAsync<InspectionModel>();
             }
             else
             {
-                return await this.GetValidationErrorResult(ModelState);
+                return await this.GetErrorResult(response);
             }
+            if (model.Conclusion == "Disease")
+            {
+                if (model.NextVisitDate == null || model.NextVisitDate == DateTime.MinValue)
+                {
+                    errors += $"{(errors == "" ? "" : "#")}ConclusionErrorПри выборе заключения болезнь дата следующего визита должна быть заполнена";
+                }
+                if (insp.Date > model.NextVisitDate)
+                {
+                    errors += $"{(errors == "" ? "" : "#")}ConclusionErrorДата следующего визита должна быть позднее даты текущего осмотра";
+                }
+                model.DeathDate = null;
+            }
+            if (model.Conclusion == "Death")
+            {
+                if (model.DeathDate == null || model.DeathDate == DateTime.MinValue)
+                {
+                    errors += $"{(errors == "" ? "" : "#")}ConclusionErrorПри выборе заключения смерть дата смерти должна быть заполнена";
+                }
+                model.NextVisitDate = null;
+            }
+            if (errors != "") return BadRequest(new ResponseModel { Message = errors });
+            if (!ModelState.IsValid) return await this.GetValidationErrorResult(ModelState);
+            response = await client.PutAsJsonAsync($"inspection/{id}", model);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return Ok();
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return Redirect("/login");
+            }
+            else
+            {
+                return await this.GetErrorResult(response);
+            }
+
         }
     }
 }

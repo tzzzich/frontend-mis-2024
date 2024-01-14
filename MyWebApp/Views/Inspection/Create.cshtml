@@ -136,6 +136,7 @@
         <div class="stand-alone input-max">
             <label class="form-label blue"><h3>Диагнозы</h3></label>
         </div>
+        <div id="diagCommonValidation" class="text-danger hidden"></div>
         <div id="diagnosesHolder"></div>
         <div class="stand-alone">
             <div class="left"><button id="addDiagnosis" class="button" style="padding-left:2em" value="" />+ Добавить диагноз</div>
@@ -152,6 +153,7 @@
     <div class="content-container" style="clear:both">
         <div class="stand-alone input-max">
             <label class="form-label blue"><h3>Заключение</h3></label>
+            <div id="conclusionValidation" class="text-danger hidden"></div>
             <div class="stand-alone" style="display:flex;">
                 <div class="col-left margin-right">
                     <label asp-for="Conclusion">Заключение</label>

@@ -15,7 +15,7 @@ $(document).ready(function () {
             $(this).val(val.substring(1))
         }
     });
-    $(".phone-mask").mask("+7(999)999-9999");
+    $(".phone-mask").mask("?+7(999)999-9999");
 });
 
 const hamburger = document.querySelector('.hamburger');

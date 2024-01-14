@@ -45,20 +45,20 @@
                 </select>
             </div>
         </div>
-        <div class="stand-alone">
-            <div class="left" style="padding-top:1.5em">
+        <div class="stand-alone flex-row space-between small-screen-block" style="align-items:flex-end">
+            <div class="left flex-row" style="align-items:center">
                 <label class="switch">
                     <input id="ScheduledVisits" type="checkbox" name="ScheduledVisits" checked="@filter.ScheduledVisits.GetValueOrDefault()">
                     <span class="slider round"></span>
                 </label>
-                <span class="form-label" style="padding-top:3em"> Есть запланированные визиты  </span>
+                <span class="form-label" style="margin-left:1em"> Есть запланированные визиты  </span>
             </div>
-            <div class="left" style="padding-top:1.5em">
+            <div class="left flex-row" style="align-items:center">
                 <label class="switch">
                     <input id="OnlyMine" type="checkbox" name="OnlyMine" checked="@filter.OnlyMine.GetValueOrDefault()">
                     <span class="slider round"></span>
                 </label>
-                <span class="form-label" style="margin-top:3em"> Мои пациенты </span>
+                <span class="form-label" style="margin-left:1em"> Мои пациенты </span>
             </div>
             <div class="right">
                 <label for="Sorting" class="form-label">Сортировка пациентов</label>
@@ -81,10 +81,10 @@
                 </select>
             </div>
         </div>
-        <div class="stand-alone">
-            <div class="left">
+        <div class="stand-alone very-small-screen-block" style="display: flex;justify-content: space-between;align-items: flex-end;">
+            <div class="left" >
                 <label for="Size" class="form-label">Число пациентов на странице</label>
-                <select id="Size" class="form-control" name="Size">
+                <select id="Size" class="form-control" name="Size" style="width:100%">
                     @{
                         string[] size = new string[] { "4", "5", "10", "20", "50", "100" };
                         foreach (string sizeItem in size)

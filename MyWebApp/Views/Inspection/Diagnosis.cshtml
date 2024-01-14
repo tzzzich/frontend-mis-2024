@@ -22,11 +22,13 @@
 <div class="stand-alone">
     <label class="form-label">Тип диагноза в осмотре</label>
     <div style="display:flex">
-        <input type="radio" name="Diagnoses[@position].type" value="Main" style="margin-left:-9px"/>
+        <input type="radio" name="Diagnoses[@position].type" value="Main" style="margin-left:-1px"/>
         <label class="form-label">Основной</label>
         <input type="radio" name="Diagnoses[@position].type" value="Concomitant"/>
         <label class="form-label">Сопутствующий</label>
         <input type="radio" name="Diagnoses[@position].type" value="Complication" />
         <label class="form-label">Осложнения</label>
     </div>
+</div>
+<div id="diagValidation_@position" class="text-danger hidden">
 </div>

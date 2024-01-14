@@ -1,9 +1,9 @@
-﻿function expandComents(id, count, expander) {
+﻿function expandComents(id, count, specName, expander) {
     const commentsHolder = $("#commentsHolder_" + id);
     if (expander.innerHTML.includes("Показать")) {
         if (commentsHolder.html() == "") {
             $.ajax({
-                url: '/inspection/getcomments/' + id,
+                url: '/inspection/getcomments/' + id + '?SpecName='+ specName,
                 method: 'get',
                 type: 'text/html',
                 success: function (data) {
@@ -48,16 +48,33 @@ function addCommentSave(commentId, consultId) {
             alert('Комментарий успешно добавлен');
             window.location.reload();
         },
-        error: function () {
-            alert("Ошибка добавления комментариев");
+        error: function (xhr) {
+            try {
+                var message = xhr.responseJSON.message;
+                if (message.includes("User doesn't have a specialty to participate")) {
+                    message = "Вы не можете добавлять коментарии к этой консультации";
+                    $("#commentReplyHolder_" + commentId).addClass("hidden");
+                }
+                if (message.includes("The Content field is required")) {
+                    message = "Комментарий не может быть пустым";
+                }
+                $("#errorComment_" + commentId).html(message);
+                $("#errorComment_" + commentId).removeClass("hidden");
+            }
+            catch {
+                alert("Ошибка добавления комментариев");
+            }
         }
     });
 }
 
 function editComment(commentId, consultId, button) {
-    if (!$(button).data('lockedAt') || +new Date() - $(button).data('lockedAt') > 300) {
+    if (!$(button).data('lockedAt') || +new Date() - $(button).data('lockedAt') > 300)
+    {
+        editLocked = true;
         const span = $("#comment_span_" + commentId);
         const input = $('#comment_input_' + commentId);
+        const errorHolder = $("#errorComment_" + commentId);
         if (button.innerHTML.includes("Редактировать")) {
             button.innerHTML = "Сохранить";
             span.addClass("hidden");
@@ -74,7 +91,15 @@ function editComment(commentId, consultId, button) {
                 method: 'put',
                 data: data,
                 success: function () {
-                    alert("Комментарий сохранен успешно");
+                    errorHolder.html("Комментарий сохранен успешно");
+                    errorHolder.removeClass('hidden');
+                    errorHolder.removeClass('text-danger');
+                    errorHolder.addClass('text-success');
+                    setTimeout(function () {
+                        errorHolder.addClass('hidden');
+                        errorHolder.addClass('text-danger');
+                        errorHolder.removeClass('text-success');
+                    }, 5000);
                     span.html(input.val());
                     span.removeClass('hidden');
                     input.addClass('hidden');
@@ -85,10 +110,13 @@ function editComment(commentId, consultId, button) {
                     alert("Ошибка сохранения комментария: " + message);
                 }
             });
+
         }
     }
     $(button).data('lockedAt', +new Date());
 }
+
+var editLocked = false;
 
 function closeEdit(commentId) {
     setTimeout(function () {
@@ -173,10 +201,63 @@ function onEditSuccess(xhr) {
 
 function onEditFailed(xhr) {
     var message = xhr.responseJSON.message;
-    $("#errors").html(message);
-    $("#errors").removeClass("hidden");
+    if (message.includes("#")) {
+        const messages = message.split("#");
+        for (mess in messages) {
+            if (messages[mess].includes("DiagnosisError")) {
+                messages[mess] = messages[mess].replace("DiagnosisError", "");
+                if (messages[mess].includes("|")) {
+                    const messageArray = messages[mess].split("|");
+                    const position = messageArray[0];
+                    messages[mess] = messageArray[1];
+                    $("#diagValidation_" + position).removeClass('hidden');
+                    if ($("#diagValidation_" + position).html != "") $("#diagValidation_" + position).append("<br/>")
+                    $("#diagValidation_" + position).append(messages[mess]);
+                } else {
+                    $("#diagCommonValidation").removeClass("hidden");
+                    $('#diagCommonValidation').append(messages[mess]);
+                }
+            }
+            else if (messages[mess].includes("ConclusionError")) {
+                messages[mess] = messages[mess].replace("ConclusionError", "");
+                $("#conclusionValidation").removeClass('hidden');
+                $('#conclusionValidation').append(messages[mess]);
+            }
+        }
+    }
+    else {
+        if (message.includes("DiagnosisError")) {
+            message = message.replace("DiagnosisError", "");
+            if (message.includes("|")) {
+                const messageArray = message.split("|");
+                const position = messageArray[0];
+                message = messageArray[1];
+                $("#diagValidation_" + position).removeClass('hidden');
+                $("#diagValidation_" + position).html(message);
+            } else {
+                $("#diagCommonValidation").removeClass("hidden");
+                $('#diagCommonValidation').html(message);
+            }
+        }
+        else if (message.includes("ConclusionError")) {
+            message = message.replace("ConclusionError", "");
+            $("#conclusionValidation").removeClass('hidden');
+            $('#conclusionValidation').html(message);
+        }
+        else {
+            $("#errors").html(message);
+            $("#errors").removeClass("hidden");
+        }
+    }
 }
 
 function closeModal() {
     $('#inspectionModal').addClass('hidden');
 }
+
+$(document).on("submit", "#editInspectionForm", function () {
+    $(".text-danger").each(function () {
+        $(this).addClass('hidden');
+        $(this).html("");
+    });
+});

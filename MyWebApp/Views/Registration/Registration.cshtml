@@ -4,9 +4,7 @@
     ViewData["Title"] = "View";
 }
 
-<main class="form-signin">
-    <div class="container justify-content-center">
-        <div class="card shadow">
+<main class="form-signin central-form card shadow">
                 <h2>Регистрация</h2>
                 <form data-ajax="true" data-ajax-method="post" data-ajax-success="onRegistrationSuccess" data-ajax-failure="onRegistrationFailed" data-ajax-url="/registration/save">
                     <div asp-validation-summary="ModelOnly" class="text-danger row"></div>
@@ -38,7 +36,7 @@
                     </div>
                     <div class="stand-alone search flex" style="overflow:visible">
                             <label for="searchBox" class="form-label">Специальность</label>
-                            <input type="hidden" id="Speciality" name="Speciality" />
+                            <input asp-for=Speciality id="Speciality"/>
                             <input id="searchBox" class="form-control" />
                             <select class="spec-results" size="10">
                             </select>
@@ -58,8 +56,6 @@
                         <input id="submitBtn" type="submit" value="Зарегистрироватся" class="button stand-alone" />
                     </div>
                 </form>
-        </div>
-    </div>
 </main>
 
 @section Scripts {

@@ -40,6 +40,7 @@
     <div class="content-container" style="clear:both">
         <div class="stand-alone input-max">
             <label class="form-label blue"><h3>Диагнозы</h3></label>
+            <div id="diagCommonValidation" class="text-danger hidden"></div>
             @if (DiagsList != null)
             {
                 foreach (var diag in DiagsList)
@@ -72,6 +73,7 @@
     <div class="content-container" style="clear:both">
         <div class="stand-alone input-max">
             <label class="form-label blue"><h3>Заключение</h3></label>
+            <div id="conclusionValidation" class="text-danger hidden"></div>
             <div class="stand-alone" style="display:flex;">
                 <div class="col-left margin-right">
                     <label asp-for="Conclusion">Заключение</label>

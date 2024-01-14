@@ -12,6 +12,7 @@ $(document).on("input", "#searchBox", function () {
         url: "/registration/getspecialites?spec=" + text,
         dataType: "html",
         success: function (data) {
+            $("#Speciality").val(null);
             $(".spec-results").html(data);
             var options = $(".spec-results option");
             var optionsCount = options.length;
@@ -44,6 +45,7 @@ $(document).ready(function () {
 
 function onRegistrationSuccess(xhr) {
     $("#success").removeClass("hidden");
+    $("#errors").addClass("hidden");
     $(".form-container").prop("disable", true);
     setTimeout(function () {
         $("#success").addClass("hidden");
@@ -53,6 +55,9 @@ function onRegistrationSuccess(xhr) {
 
 function onRegistrationFailed(xhr) {
     var message = xhr.responseJSON.message;
+    if (message.includes("is already taken")) {
+        message = message.replace('Username', "Пользователь с адресом электронной почты").replace('is already taken', 'уже существует');
+    }
     $("#errors").html(message);
     $("#errors").removeClass("hidden");
 }

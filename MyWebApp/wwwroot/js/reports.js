@@ -23,13 +23,20 @@ function hideRootsList() {
 }
 
 function addRootItem(id) {
-    $("#innerRootItem_" + id).removeClass('hidden');
-    $("#outerRootItem_" + id).addClass('hidden');
-    $("#rootid_" + id).prop("disabled", false);
+    if ($("#outerRootItem_" + id).hasClass('selectedRoot')){
+        $("#innerRootItem_" + id).addClass('hidden');
+        $("#outerRootItem_" + id).removeClass('selectedRoot');
+        $("#rootid_" + id).prop("disabled", true);
+    }
+    else {
+        $("#innerRootItem_" + id).removeClass('hidden');
+        $("#outerRootItem_" + id).addClass('selectedRoot');
+        $("#rootid_" + id).prop("disabled", false);
+    }
 }
 
 function removeRootItem(id) {
     $("#innerRootItem_" + id).addClass('hidden');
-    $("#outerRootItem_" + id).removeClass('hidden');
+    $("#outerRootItem_" + id).removeClass('selectedRoot');
     $("#rootid_" + id).prop("disabled", true);
 }

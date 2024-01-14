@@ -9,7 +9,7 @@ namespace MyWebApp.Utils
             if (value == null) return true;
             if (value is DateTime birthDate)
             {
-                var today = DateTime.Today;
+                var today = DateTime.Now;
                 var minDate = today.AddYears(-100);
 
                 return birthDate <= today && birthDate >= minDate;

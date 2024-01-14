@@ -11,10 +11,10 @@
             @{
                 first = false;
             }
-            <h4 class="no-margin-vertical">@comment.Comment.Author</h4>
+            <h4 class="no-margin-vertical">@comment.Comment.Author <span style="font-size:small;color:lightgray">(@Model.SpecName)</span></h4>
             <div class="flex" style="padding-left:10px">
                 <div class="flex-row space-between">
-                    <span id="comment_span_@comment.Comment.Id" class="left fill">@comment.Comment.Content</span>
+                    <span id="comment_span_@comment.Comment.Id" class="left fill comment-text">@comment.Comment.Content</span>
                     @if (comment.Comment.AuthorId == Model.UserId)
                     {
                         <input id="comment_input_@comment.Comment.Id" type="text" class="fill hidden" style="margin-right:10px" value="@comment.Comment.Content" onfocusout="closeEdit('@comment.Comment.Id')" />
@@ -22,17 +22,19 @@
                     }
                 </div>
                 <div style="display:flex;align-items:flex-start">
-                    @if (comment.Comment.ModifiedDate != null && comment.Comment.ModifiedDate.GetValueOrDefault() != comment.Comment.CreateTime)
-                    {
-                        <span class="text-grey"> (изменен: @comment.Comment.ModifiedDate.GetValueOrDefault().ToString("dd.MM.yyyy hh:mm"))</span>
+                    @{
+                        bool isModified = (comment.Comment.ModifiedDate != null && comment.Comment.ModifiedDate.GetValueOrDefault() != comment.Comment.CreateTime);
                     }
-                    else
-                    {
-                        <span class="text-grey">@comment.Comment.CreateTime.ToString("dd.MM.yyyy hh:mm")</span>
-                    }
+                    <span class="text-grey tooltip">
+                        @comment.Comment.CreateTime.ToString("dd.MM.yyyy hh:mm")
+                        @if (isModified)
+                        {
+                            <span class="tooltiptext"> изменен: @comment.Comment.ModifiedDate.GetValueOrDefault().ToString("dd.MM.yyyy hh:mm")</span>
+                        }
+                    </span>
                     @if (comment.ChildComments.Count > 0)
                     {
-                        <span class="blue-only-color" style="font-size:small;margin-left:10px;cursor:pointer" onclick="expandComents('@comment.Comment.Id', '@comment.ChildComments.Count', this)"> Показать ответы(@(comment.ChildComments.Count))</span>
+                        <span class="blue-only-color" style="font-size:small;margin-left:10px;cursor:pointer" onclick="expandComents('@comment.Comment.Id', '@comment.ChildComments.Count', '@Model.SpecName', this)"> Показать ответы(@(comment.ChildComments.Count))</span>
                     }
                     <a class="blue-only-color" style="text-decoration:none; font-size:small;margin-left:10px;cursor:pointer" onclick="addComment('@comment.Comment.Id')"> Ответить</a>
                 </div>
@@ -40,6 +42,7 @@
                     <input id="newCommentText_@comment.Comment.Id" type="text" placeholder="Оставить комментарий" style="width:100%;margin-right:10px" />
                     <button class="button" onclick="addCommentSave('@comment.Comment.Id', '@Model.ConsultId')">Оставить комментарий</button>
                 </div>
+                <div id="errorComment_@comment.Comment.Id" class="text-danger hidden"></div>
             </div>
         </div>
         <div style="max-width:400px;border-block-end:1px solid lightgrey"></div>
